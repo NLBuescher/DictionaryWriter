@@ -1,0 +1,42 @@
+d:dictionary [xmlns, xmlns:d]
++-> d:entry [d:title, id]
+    |-> d:index [d:title, d:value]
+    |-> HeadGroup
+    |   |-> HeadWord
+    |   +-> Pronunciation [|...|]
+    |       +-> LA_IPA *
+    |-> EntryBlock
+    |   +-> Entry
+    |       |-> GrammarGroup
+    |       |   |-> Grammar
+    |       |   |-> Specification
+    |       |   +-> FormGroup [(..., ...)]
+    |       |       +-> Form [1..*]
+    |       |           |-> FormLabel
+    |       |           |-> FormText
+    |       |           +-> Pronunciation
+    |       +-> DefinitionGroup
+    |           |-> Definition
+    |           |   |-> DefinitionLabel
+    |           |   |-> Specification
+    |           |   +-> DefinitionText
+    |           +-> SubDefinitionGroup
+    |               +-> SubDefinition
+    |                   |-> SubDefinitionLabel
+    |                   |-> Specification
+    |                   +-> SubDefinitionText
+    +-> SubEntryBlock
+        |-> SubEntry
+        |   |-> SubEntryLabel
+        |   |-> SubEntryText
+        |   +-> SubEntryListItemGroup
+        |       +-> SubEntryListItem [1..*]
+        |           |-> SubEntryListItemLabel
+        |           |-> Specification
+        |           +-> SubEntryListItemText
+        +-> NoteBlock
+            +-> Note [1..*]
+
+Special Character Notation for XSLT support: ^?^
+This will be replaced with a span that has the specified id.
+E.g. ^v^ will be replaced with <span id="v"/> when exporting or saving the file.
