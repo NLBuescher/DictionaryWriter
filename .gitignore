@@ -1,0 +1,8 @@
+
+*.class
+
+.idea
+
+DictionaryWriter.iml
+
+out
