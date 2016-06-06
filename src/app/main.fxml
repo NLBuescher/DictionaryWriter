@@ -11,12 +11,31 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.web.WebView?>
+
+<!--
+    Dictionary Writer FXML UI Spec
+    Copyright (C) 2016  Nicola Buescher
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
 
 <BorderPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
   <top>
@@ -38,7 +57,6 @@
                       <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                   </accelerator>
               </MenuItem>
-              <MenuItem mnemonicParsing="false" onAction="#newFileTest" text="Export Test File..." />
           </Menu>
           <Menu mnemonicParsing="false" text="Edit">
               <MenuItem mnemonicParsing="false" text="Delete" />
@@ -76,8 +94,14 @@
        <VBox>
            <ButtonBar buttonMinWidth="20.0" VBox.vgrow="NEVER">
                <buttons>
-                   <Button mnemonicParsing="false" onAction="#addNewElement" text="+" />
-                   <Button mnemonicParsing="false" onAction="#removeSelectedElement" text="-" />
+                   <Button fx:id="addItemButton" mnemonicParsing="false" onAction="#addNewItem" text="+">
+                  <tooltip>
+                     <Tooltip text="Add..." />
+                  </tooltip></Button>
+                   <Button mnemonicParsing="false" onAction="#removeSelectedItem" text="-">
+                  <tooltip>
+                     <Tooltip text="Remove Item" />
+                  </tooltip></Button>
                </buttons>
            </ButtonBar>
            <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" showRoot="false" VBox.vgrow="ALWAYS" />

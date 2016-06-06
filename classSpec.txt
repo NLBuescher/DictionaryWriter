@@ -1,0 +1,57 @@
+d:dictionary [xmlns, xmlns:d]
++-> d:entry [d:title, id]
+    |-> d:index [d:title, d:value]
+    |-> HeadGroup
+    |   |-> HeadWord
+    |   +-> Pronunciation [|...|]
+    |       +-> LA_IPA *
+    +-> EntryGroup
+        +-> Entry
+            |-> GrammarGroup
+            |   |-> Grammar
+            |   |-> Specification
+            |   +-> FormGroup [(..., ...)]
+            |       +-> Form
+            |           |-> FormLabel
+            |           |-> FormText
+            |           +-> Pronunciation
+            +-> DefinitionGroup
+            |   |-> DefinitionGroupLabel
+            |   +-> Definition
+            |       |-> DefinitionLabel
+            |       |-> Specification
+            |       |-> DefinitionText
+            |       |-> ExampleGroup
+            |       |   +-> Example
+            |       |       |-> ExampleLabel
+            |       |       |-> Specification
+            |       |       |-> ExampleText
+            |       |       +-> ExampleTranslation
+            |       +-> SubDefinitionGroup
+            |           +-> SubDefinition
+            |               |-> SubDefinitionLabel
+            |               |-> Specification
+            |               |-> SubDefinitionText
+            |               +-> ExampleGroup
+            |                   +-> Example
+            |                       |-> ExampleLabel
+            |                       |-> Specification
+            |                       |-> ExampleText
+            |                       +-> ExampleTranslation
+            +-> SubEntryGroup
+                +-> SubEntry
+                    |-> SubEntryLabel
+                    |-> SubEntryText
+                    |-> SubEntryList
+                    |   +-> SubEntryListItem
+                    |       |-> SubEntryListItemLabel
+                    |       |-> Specification
+                    |       +-> SubEntryListItemText
+                    +-> NoteGroup
+                        +-> Note
+
+Special Character Notation for XSLT support: \\?
+This will be replaced with a span that has the specified id.
+E.g. \\v will be replaced with <span id="v"/> when exporting or saving the file.
+
+Markdown syntax for **bold**, *italic*, and `superscript` is supported
