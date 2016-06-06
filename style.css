@@ -1,0 +1,240 @@
+@charset "UTF-8";
+/*@namespace html url(http://www.w3.org/1999/xhtml);*/
+/*@namespace o url(http://oup.dataformat.com/doc/OUP_DTD_Dictionary.html);*/
+@namespace d url(http://www.apple.com/DTDs/DictionaryService-1.0.rng);
+
+/*==== HTML ====*/
+
+a {
+	color: #2971A7;
+	font-size: 110%;
+	font-variant: small-caps;
+	font-weight: 500;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #2971A7;
+	text-decoration: underline;
+}
+
+body {
+	font-family: -apple-system, sans-serif;
+	font-size: 12pt;
+	margin-bottom: 1.5em;
+	margin-left: 0.9em;
+	margin-right: 0em;
+	margin-top: 1.5em;
+}
+
+caption {
+	font-size: 80%;
+	margin-bottom: 0.5em;
+	text-align: left;
+	text-transform: uppercase;
+}
+
+html.apple_client-panel a,
+html.apple_client-panel a:hover {
+	color: #000000;
+	text-decoration: none;
+}
+
+sup {
+	font-size: smaller;
+	line-height: 0;
+}
+
+table {
+	border-style: solid;
+	border-width: 1px;
+	font-weight: normal;
+	margin-left: 14px;	/*if indent 30px*/
+	margin-top: 1em;
+	table-layout: fixed;
+	width:90%;
+}
+
+td {}
+
+tr {
+	font-size: 80%;
+	width:30%;
+}
+
+/*==== Dictionary Structure ====*/
+
+d|dictionary {
+	font-family: -apple-system, sans-serif;
+	font-size: 12pt;
+	margin-bottom: 1.5em;
+	margin-left: 0.9em;
+	margin-right: 0em;
+	margin-top: 1.5em;
+}
+
+d|entry {
+	display: block;
+	font-size:84%;
+	line-height:145%;
+	margin-bottom: 4em;
+}
+
+d|pr {}
+
+span.definition {
+	display: block;
+	margin-left: 2.2em;
+	margin-right: 1em;
+	margin-top: 1.7em;
+}
+span.definitionGroup {}
+span.definitionGroupLabel {
+	display: block;
+	font-weight: 600;
+	margin-bottom: -1.2em;
+	margin-top: 1.7em;
+}
+span.definitionLabel {
+	color: #888888;
+	margin-left: -1.9em;
+	margin-right: 1em;
+}
+span.definitionText {}
+
+span.entryGroup {
+	display: block;
+	margin-bottom: 2.2em;
+	margin-top: 0.4em;
+}
+
+span.entry {}
+
+span.example {}
+span.exampleGroup {
+	display: block;
+	margin-left: 1em;
+	margin-top: 0em;
+}
+span.exampleLabel {
+	font-weight: 600;
+	margin-left: -0.9em;
+	margin-right: 0.3em;
+}
+span.exampleText {
+	font-style: italic;
+}
+span.exampleTranslation {
+	font-style: normal;
+}
+
+span.form {}
+span.formText{
+	font-weight: 600;
+}
+span.formGroup {
+	vertical-align: 5%;
+}
+span.formLabel {
+	font-style: italic;
+}
+
+span.grammar {
+	font-size: 120%;
+	margin-right: 1em;
+}
+span.grammarGroup {}
+
+span.headGroup {}
+span.headGroup span.pronunciation {
+	margin-left: 0.5em;
+	font-size: 120%;
+	vertical-align: 12%;
+}
+span.headWord {
+	font-size: 170%;
+}
+
+span.note {
+	background-color: #eeeeee;
+	display: block;
+	margin-bottom: 1em;
+	margin-top: 1em;
+	padding: 0.33em;
+}
+span.noteGroup {}
+
+span.pronunciation {
+	color: #666666;
+}
+span.pronunciation span {
+	margin-left: 0.3em;
+	margin-right: 0.3em;
+}
+
+span.specification {
+	color: #888888;
+	font-style: italic;
+	margin-right: 0.3em;
+}
+
+span.subDefinition {}
+span.subDefinitionGroup {
+	display: block;
+	margin-left: 1.7em;
+	margin-top: 0.7em;
+}
+span.subDefinitionLabel {
+	margin-left: -1.3em;
+	margin-right: 0.4em;
+}
+span.subDefinitionText {	}
+
+span.subEntry {
+	display: block;
+	margin-left: 1em;
+	margin-right: 0.5em;
+	margin-top: 2em;
+}
+span.subEntryGroup {
+	display: block;
+	margin-right: 1em;
+	margin-top: 3em;
+	text-indent: 0px;
+}
+span.subEntryLabel {
+	border-bottom: solid thin #dddddd;
+	display: block;
+	font-size: 85%;
+	font-weight: 600;
+	margin-bottom: 1.6em;
+	margin-left: -1em;
+	padding-bottom: 0.3em;
+}
+span.subEntryText {}
+span.subEntryTextHead {
+	display: block;
+	font-weight: 600;
+}
+
+span.subEntryList {}
+span.subEntryListItem {
+	display: block;
+	margin-left: 1em;
+	margin-top: 0.4em;
+}
+span.subEntryListItemLabel {
+	margin-left: -1.3em;
+	margin-right: 0.4em;
+}
+span.subEntryListItemText {}
+
+span.subText {}
+span.subTextGroup {
+	display: block;
+	margin-left: 1em;
+}
+span.subTextLabel {
+	margin-left: -0.9em;
+}
+span.subTextText {}

@@ -41,6 +41,11 @@
   <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
           <Menu mnemonicParsing="false" text="File">
+            <MenuItem fx:id="newMenuItem" mnemonicParsing="false" onAction="#newFile" text="New">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="N" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator></MenuItem>
+            <SeparatorMenuItem mnemonicParsing="false" />
               <MenuItem fx:id="openMenuItem" mnemonicParsing="false" onAction="#openFile" text="Open...">
                   <accelerator>
                       <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
@@ -57,12 +62,6 @@
                       <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                   </accelerator>
               </MenuItem>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-              <MenuItem mnemonicParsing="false" text="Delete" />
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-              <MenuItem mnemonicParsing="false" text="About" />
           </Menu>
       </MenuBar>
   </top>
@@ -104,7 +103,7 @@
                   </tooltip></Button>
                </buttons>
            </ButtonBar>
-           <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" showRoot="false" VBox.vgrow="ALWAYS" />
+           <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
        </VBox>
    </left>
 </BorderPane>

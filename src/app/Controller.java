@@ -5,6 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
@@ -12,13 +13,13 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.PopupWindow;
 import org.controlsfx.control.PopOver;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -61,6 +62,7 @@ public class Controller implements Initializable {
     public BorderPane root;
 
     public MenuBar  menuBar;
+    public MenuItem newMenuItem;
     public MenuItem openMenuItem;
     public MenuItem saveMenuItem;
     public MenuItem saveAsMenuItem;
@@ -85,6 +87,7 @@ public class Controller implements Initializable {
 
         if (os != null && (os.startsWith ("Mac"))) {
             menuBar.setUseSystemMenuBar (true);
+            newMenuItem.setAccelerator (new KeyCodeCombination (KeyCode.N, KeyCombination.META_DOWN));
             openMenuItem.setAccelerator (new KeyCodeCombination (KeyCode.O, KeyCombination.META_DOWN));
             saveMenuItem.setAccelerator (new KeyCodeCombination (KeyCode.S, KeyCombination.META_DOWN));
             saveAsMenuItem.setAccelerator (new KeyCodeCombination (KeyCode.S, KeyCombination.META_DOWN, KeyCombination.SHIFT_DOWN));
@@ -92,13 +95,15 @@ public class Controller implements Initializable {
 
         treeView.getSelectionModel ().selectedItemProperty ().addListener ((observable, oldValue, newValue) -> {
             updateEditor (newValue);
+            updatePreview (newValue);
         });
     }
 
     private void updateEditor (TreeItem<Object> treeItem) {
         editorVBox.getChildren ().clear ();
 
-        if (treeItem.getValue () == null) {
+        if (treeItem == null) {
+        } else if (treeItem.getValue () == null) {
 
         } else if (treeItem.getValue () instanceof Definition) {
 
@@ -112,8 +117,11 @@ public class Controller implements Initializable {
 
             TextField definitionLabelTextField = new TextField (((Definition) treeItem.getValue ()).getDefinitionLabel ());
             definitionLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Definition) treeItem.getValue ()).setDefinitionLabel (definitionLabelTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
+
             });
             editorVBox.getChildren ().add (definitionLabelTextField);
 
@@ -123,8 +131,10 @@ public class Controller implements Initializable {
 
             TextField specificationTextField = new TextField (((Definition) treeItem.getValue ()).getSpecification ());
             specificationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Definition) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (specificationTextField);
 
@@ -134,8 +144,10 @@ public class Controller implements Initializable {
 
             TextField definitionTextTextField = new TextField (((Definition) treeItem.getValue ()).getDefinitionText ());
             definitionTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Definition) treeItem.getValue ()).setDefinitionText (definitionTextTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (definitionTextTextField);
 
@@ -150,10 +162,12 @@ public class Controller implements Initializable {
             editorVBox.getChildren ().add (definitionGroupLabelLabel);
 
             TextField definitionGroupLabelTextField = new TextField (((DefinitionGroup) treeItem.getValue ()).getDefinitionGroupLabel ());
-            definitionGroupLabelTextField.focusedProperty ().addListener (((observable, oldValue, newValue) -> {
-                if (!newValue)
+            definitionGroupLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
+                if (!newValue) {
                     ((DefinitionGroup) treeItem.getValue ()).setDefinitionGroupLabel (definitionGroupLabelTextField.getText ());
-            }));
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
+            });
             editorVBox.getChildren ().add (definitionGroupLabelTextField);
 
         } else if (treeItem.getValue () instanceof DictEntry) {
@@ -168,8 +182,10 @@ public class Controller implements Initializable {
 
             TextField entryIDTextField = new TextField (((DictEntry) treeItem.getValue ()).getId ());
             entryIDTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((DictEntry) treeItem.getValue ()).setId (entryIDTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (entryIDTextField);
 
@@ -179,8 +195,10 @@ public class Controller implements Initializable {
 
             TextField entryTitleTextField = new TextField (((DictEntry) treeItem.getValue ()).getTitle ());
             entryTitleTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((DictEntry) treeItem.getValue ()).setTitle (entryTitleTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (entryTitleTextField);
 
@@ -208,8 +226,10 @@ public class Controller implements Initializable {
 
             TextField exampleLabelTextField = new TextField (((Example) treeItem.getValue ()).getExampleLabel ());
             exampleLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Example) treeItem.getValue ()).setExampleLabel (exampleLabelTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (exampleLabelTextField);
 
@@ -219,8 +239,10 @@ public class Controller implements Initializable {
 
             TextField specificationTextField = new TextField (((Example) treeItem.getValue ()).getSpecification ());
             specificationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Example) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (specificationTextField);
 
@@ -230,8 +252,10 @@ public class Controller implements Initializable {
 
             TextField exampleTextTextField = new TextField (((Example) treeItem.getValue ()).getExampleText ());
             exampleTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Example) treeItem.getValue ()).setExampleText (exampleTextTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (exampleTextTextField);
 
@@ -241,8 +265,10 @@ public class Controller implements Initializable {
 
             TextField exampleTranslationTextField = new TextField (((Example) treeItem.getValue ()).getExampleTranslation ().replaceFirst ("\\s–\\s", ""));
             exampleTranslationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Example) treeItem.getValue ()).setExampleTranslation (" – " + exampleTranslationTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (exampleTranslationTextField);
 
@@ -264,8 +290,10 @@ public class Controller implements Initializable {
 
             TextField formLabelTextField = new TextField (((Form) treeItem.getValue ()).getFormLabel ());
             formLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Form) treeItem.getValue ()).setFormLabel (formLabelTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (formLabelTextField);
 
@@ -275,8 +303,10 @@ public class Controller implements Initializable {
 
             TextField formTextTextField = new TextField (((Form) treeItem.getValue ()).getFormText ());
             formTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Form) treeItem.getValue ()).setFormText (formTextTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (formTextTextField);
 
@@ -298,8 +328,10 @@ public class Controller implements Initializable {
 
             TextField grammarTextField = new TextField (((GrammarGroup) treeItem.getValue ()).getGrammar ());
             grammarTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((GrammarGroup) treeItem.getValue ()).setGrammar (grammarTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (grammarTextField);
 
@@ -309,8 +341,10 @@ public class Controller implements Initializable {
 
             TextField specificationTextField = new TextField (((GrammarGroup) treeItem.getValue ()).getSpecification ());
             specificationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((GrammarGroup) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (specificationTextField);
 
@@ -326,8 +360,10 @@ public class Controller implements Initializable {
 
             TextField headWordTextField = new TextField (((HeadGroup) treeItem.getValue ()).getHeadWord ());
             headWordTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((HeadGroup) treeItem.getValue ()).setHeadWord (headWordTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (headWordTextField);
 
@@ -343,8 +379,10 @@ public class Controller implements Initializable {
 
             TextField indexTitleTextField = new TextField (((Index) treeItem.getValue ()).getTitle ());
             indexTitleTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Index) treeItem.getValue ()).setTitle (indexTitleTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (indexTitleTextField);
 
@@ -354,8 +392,10 @@ public class Controller implements Initializable {
 
             TextField indexValueTextField = new TextField (((Index) treeItem.getValue ()).getValue ());
             indexValueTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Index) treeItem.getValue ()).setValue (indexValueTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (indexValueTextField);
 
@@ -371,8 +411,10 @@ public class Controller implements Initializable {
 
             TextArea noteTextTextArea = new TextArea (((Note) treeItem.getValue ()).getNoteText ());
             noteTextTextArea.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Note) treeItem.getValue ()).setNoteText (noteTextTextArea.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (noteTextTextArea);
 
@@ -394,8 +436,10 @@ public class Controller implements Initializable {
 
             TextField clTextField = new TextField (((Pronunciation) treeItem.getValue ()).getCL_IPA ());
             clTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Pronunciation) treeItem.getValue ()).setCL_IPA (clTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (clTextField);
 
@@ -405,8 +449,10 @@ public class Controller implements Initializable {
 
             TextField vaTextField = new TextField (((Pronunciation) treeItem.getValue ()).getVA_IPA ());
             vaTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((Pronunciation) treeItem.getValue ()).setVA_IPA (vaTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (vaTextField);
 
@@ -422,8 +468,10 @@ public class Controller implements Initializable {
 
             TextField subDefinitionLabelTextField = new TextField (((SubDefinition) treeItem.getValue ()).getSubDefinitionLabel ());
             subDefinitionLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubDefinition) treeItem.getValue ()).setSubDefinitionLabel (subDefinitionLabelTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (subDefinitionLabelTextField);
 
@@ -433,8 +481,10 @@ public class Controller implements Initializable {
 
             TextField specificationTextField = new TextField (((SubDefinition) treeItem.getValue ()).getSpecification ());
             specificationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubDefinition) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (specificationTextField);
 
@@ -444,8 +494,10 @@ public class Controller implements Initializable {
 
             TextField subDefinitionTextTextField = new TextField (((SubDefinition) treeItem.getValue ()).getSubDefinitionText ());
             subDefinitionTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubDefinition) treeItem.getValue ()).setSubDefinitionText (subDefinitionTextTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (subDefinitionTextTextField);
 
@@ -467,8 +519,10 @@ public class Controller implements Initializable {
 
             TextField subEntryLabelTextField = new TextField (((SubEntry) treeItem.getValue ()).getSubEntryLabel ());
             subEntryLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubEntry) treeItem.getValue ()).setSubEntryLabel (subEntryLabelTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (subEntryLabelTextField);
 
@@ -478,8 +532,10 @@ public class Controller implements Initializable {
 
             TextField subEntryTextTextField = new TextField (((SubEntry) treeItem.getValue ()).getSubEntryText ());
             subEntryTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubEntry) treeItem.getValue ()).setSubEntryText (subEntryTextTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (subEntryTextTextField);
 
@@ -507,8 +563,10 @@ public class Controller implements Initializable {
 
             TextField subEntryListItemLabelTextField = new TextField (((SubEntryListItem) treeItem.getValue ()).getSubEntryListItemLabel ());
             subEntryListItemLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubEntryListItem) treeItem.getValue ()).setSubEntryListItemLabel (subEntryListItemLabelTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (subEntryListItemLabelTextField);
 
@@ -518,8 +576,10 @@ public class Controller implements Initializable {
 
             TextField specificationTextField = new TextField (((SubEntryListItem) treeItem.getValue ()).getSpecification ());
             specificationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubEntryListItem) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (specificationTextField);
 
@@ -529,23 +589,74 @@ public class Controller implements Initializable {
 
             TextField subEntryListItemTextTextField = new TextField (((SubEntryListItem) treeItem.getValue ()).getSubEntryListItemText ());
             subEntryListItemTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
+                if (!newValue) {
                     ((SubEntryListItem) treeItem.getValue ()).setSubEntryListItemText (subEntryListItemTextTextField.getText ());
+                    treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                }
             });
             editorVBox.getChildren ().add (subEntryListItemTextTextField);
 
         }
     }
 
-    private void loadFile () {
-        Main.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
+    public void updatePreview (TreeItem<Object> treeItem) {
+        TreeItem<Object> item = treeItem;
 
-        WebEngine webEngine = previewWebView.getEngine ();
+        if (!(item.getValue () instanceof Dictionary))
+            while (!(item.getValue () instanceof DictEntry))
+                item = item.getParent ();
+
         try {
-            webEngine.load (currentFile.toURI ().toURL ().toString ());
+            Document document = DocumentBuilderFactory.newInstance ().newDocumentBuilder ().newDocument ();
+
+            Element root;
+            if (item.getValue () instanceof Dictionary) {
+                root = ((Dictionary) item.getValue ()).toElement (document);
+            } else {
+                Dictionary dict = new Dictionary ();
+                dict.getEntries ().add ((DictEntry) item.getValue ());
+                root = dict.toElement (document);
+            }
+
+            document.appendChild (root);
+            document.insertBefore (document.createProcessingInstruction ("xml-stylesheet", "type=\"text/css\" href=\"style.css\""), root);
+            document.insertBefore (document.createProcessingInstruction ("xml-stylesheet", "type=\"text/xsl\" href=\"webtransform.xsl\""), root);
+
+            DOMSource    source = new DOMSource (document);
+            StringWriter writer = new StringWriter ();
+            StreamResult result = new StreamResult (writer);
+
+            TransformerFactory.newInstance ().newTransformer ().transform (source, result);
+
+            String previewString = writer.toString ()
+                    .replaceAll ("\\?><", "?>\n<")
+                    .replaceFirst (" standalone=\"no\"", "")
+                    .replaceFirst ("<d:dictionary", "\n<d:dictionary")
+                    .replaceAll ("\\n[\\s]*<span d:pr", "<span d:pr")
+                    .replaceAll (">\\(<", ">\n\t\t\t\t\t\t(\n\t\t\t\t\t\t<")
+                    .replaceAll (">,<", ">\n\t\t\t\t\t\t,\t\t\t\t\t\t\n<")
+                    .replaceAll (">\\)<", ">\n\t\t\t\t\t\t)\n\t\t\t\t\t<")
+                    .replaceAll ("@@(.)", "<span id=\"$1\"/>")
+                    .replaceAll ("\\*\\*\\*(.*?)\\*\\*\\*", "<b><i>$1</i></b>")
+                    .replaceAll ("\\*\\*(.*?)\\*\\*", "<b>$1</b>")
+                    .replaceAll ("\\*(.*?)\\*", "<i>$1</i>")
+                    .replaceAll ("\\^\\((.*?)\\)", "<sup>$1</sup>")
+                    .replaceAll ("\\^(.)", "<sup>$1</sup>");
+
+            File preview = new File ("~preview.xhtml");
+            FileOutputStream out = new FileOutputStream (preview);
+
+            out.write (previewString.getBytes ("UTF-8"));
+
+            WebEngine webEngine = previewWebView.getEngine ();
+            webEngine.load (preview.toURI ().toURL ().toString ());
         } catch (Exception e) {
             e.printStackTrace ();
         }
+    }
+
+    private void loadFile () {
+        Main.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
 
         try {
             String inputString = new Scanner (currentFile).useDelimiter ("\\Z").next ()
@@ -557,6 +668,11 @@ public class Controller implements Initializable {
             Element element = DocumentBuilderFactory.newInstance ().newDocumentBuilder ().parse (new InputSource (new StringReader (inputString))).getDocumentElement ();
             dictionary = Dictionary.fromElement (element);
             TreeItem<Object> treeRoot = new TreeItem<> (dictionary);
+            treeRoot.setExpanded (true);
+            treeRoot.expandedProperty ().addListener ((observable, oldValue, newValue) -> {
+                if (!newValue)
+                    treeRoot.setExpanded (true);
+            });
 
             addToTree (dictionary, treeRoot);
 
@@ -580,6 +696,7 @@ public class Controller implements Initializable {
         } else if (item instanceof Definition) {
             Definition       definition = ((Definition) item);
             TreeItem<Object> treeItem   = new TreeItem<> (definition);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (definition.getExampleGroup (), treeItem);
@@ -589,6 +706,7 @@ public class Controller implements Initializable {
         } else if (item instanceof DefinitionGroup) {
             DefinitionGroup  definitionGroup = ((DefinitionGroup) item);
             TreeItem<Object> treeItem        = new TreeItem<> (definitionGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (Definition definition : definitionGroup.getDefinitions ())
@@ -609,6 +727,7 @@ public class Controller implements Initializable {
         } else if (item instanceof Entry) {
             Entry            entry    = ((Entry) item);
             TreeItem<Object> treeItem = new TreeItem<> (entry);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (entry.getGrammarGroup (), treeItem);
@@ -621,6 +740,7 @@ public class Controller implements Initializable {
         } else if (item instanceof EntryGroup) {
             EntryGroup       entryGroup = ((EntryGroup) item);
             TreeItem<Object> treeItem   = new TreeItem<> (entryGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (Entry entry : entryGroup.getEntries ())
@@ -629,11 +749,13 @@ public class Controller implements Initializable {
         } else if (item instanceof Example) {
             Example          example  = ((Example) item);
             TreeItem<Object> treeItem = new TreeItem<> (example);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
         } else if (item instanceof ExampleGroup) {
             ExampleGroup     exampleGroup = ((ExampleGroup) item);
             TreeItem<Object> treeItem     = new TreeItem<> (exampleGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (Example example : exampleGroup.getExamples ())
@@ -642,6 +764,7 @@ public class Controller implements Initializable {
         } else if (item instanceof Form) {
             Form             form     = ((Form) item);
             TreeItem<Object> treeItem = new TreeItem<> (form);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (form.getPronunciation (), treeItem);
@@ -649,6 +772,7 @@ public class Controller implements Initializable {
         } else if (item instanceof FormGroup) {
             FormGroup        formGroup = ((FormGroup) item);
             TreeItem<Object> treeItem  = new TreeItem<> (formGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (Form form : formGroup.getForms ())
@@ -657,6 +781,7 @@ public class Controller implements Initializable {
         } else if (item instanceof GrammarGroup) {
             GrammarGroup     grammarGroup = ((GrammarGroup) item);
             TreeItem<Object> treeItem     = new TreeItem<> (grammarGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (grammarGroup.getFormGroup (), treeItem);
@@ -664,6 +789,7 @@ public class Controller implements Initializable {
         } else if (item instanceof HeadGroup) {
             HeadGroup        headGroup = ((HeadGroup) item);
             TreeItem<Object> treeItem  = new TreeItem<> (headGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (headGroup.getPronunciation (), treeItem);
@@ -671,16 +797,19 @@ public class Controller implements Initializable {
         } else if (item instanceof Index) {
             Index            index    = ((Index) item);
             TreeItem<Object> treeItem = new TreeItem<> (index);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
         } else if (item instanceof Note) {
             Note             note     = ((Note) item);
             TreeItem<Object> treeItem = new TreeItem<> (note);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
         } else if (item instanceof NoteGroup) {
             NoteGroup        noteGroup = ((NoteGroup) item);
             TreeItem<Object> treeItem  = new TreeItem<> (noteGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (Note note : noteGroup.getNotes ())
@@ -689,11 +818,13 @@ public class Controller implements Initializable {
         } else if (item instanceof Pronunciation) {
             Pronunciation    pronunciation = ((Pronunciation) item);
             TreeItem<Object> treeItem      = new TreeItem<> (pronunciation);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
         } else if (item instanceof SubDefinition) {
             SubDefinition    subDefinition = ((SubDefinition) item);
             TreeItem<Object> treeItem      = new TreeItem<> (subDefinition);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (subDefinition.getExampleGroup (), treeItem);
@@ -701,6 +832,7 @@ public class Controller implements Initializable {
         } else if (item instanceof SubDefinitionGroup) {
             SubDefinitionGroup subDefinitionGroup = ((SubDefinitionGroup) item);
             TreeItem<Object>   treeItem           = new TreeItem<> (subDefinitionGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (SubDefinition subDefinition : subDefinitionGroup.getSubDefinitions ())
@@ -709,6 +841,7 @@ public class Controller implements Initializable {
         } else if (item instanceof SubEntry) {
             SubEntry         subEntry = ((SubEntry) item);
             TreeItem<Object> treeItem = new TreeItem<> (subEntry);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             addToTree (subEntry.getSubEntryList (), treeItem);
@@ -718,6 +851,7 @@ public class Controller implements Initializable {
         } else if (item instanceof SubEntryGroup) {
             SubEntryGroup    subEntryGroup = ((SubEntryGroup) item);
             TreeItem<Object> treeItem      = new TreeItem<> (subEntryGroup);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (SubEntry subEntry : subEntryGroup.getSubEntries ())
@@ -726,6 +860,7 @@ public class Controller implements Initializable {
         } else if (item instanceof SubEntryList) {
             SubEntryList     subEntryList = ((SubEntryList) item);
             TreeItem<Object> treeItem     = new TreeItem<> (subEntryList);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
             for (SubEntryListItem subEntryListItem : subEntryList.getSubEntryListItems ())
@@ -734,6 +869,7 @@ public class Controller implements Initializable {
         } else if (item instanceof SubEntryListItem) {
             SubEntryListItem subEntryListItem = ((SubEntryListItem) item);
             TreeItem<Object> treeItem         = new TreeItem<> (subEntryListItem);
+            treeItem.setExpanded (true);
             root.getChildren ().add (treeItem);
 
         } else {
@@ -763,6 +899,8 @@ public class Controller implements Initializable {
                 currentFile = fileChooser.showSaveDialog (root.getScene ().getWindow ());
             }
             if (currentFile != null) {
+                Main.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
+
                 try {
                     Transformer transformer = TransformerFactory.newInstance ().newTransformer ();
                     transformer.setOutputProperty (OutputKeys.INDENT, "yes");
@@ -800,8 +938,6 @@ public class Controller implements Initializable {
                     out.write (outString.getBytes ("UTF-8"));
 
                     System.out.println ("File Saved!");
-
-                    loadFile ();
                 } catch (Exception e) {
                     e.printStackTrace ();
                 }
@@ -821,83 +957,85 @@ public class Controller implements Initializable {
     public void removeSelectedItem () {
         TreeItem<Object> treeItem = treeView.getSelectionModel ().getSelectedItem ();
 
-        if (treeItem.getValue () == null) {
+        if (!(treeItem.getValue () instanceof Dictionary)) {
+            if (treeItem.getValue () == null) {
 
-        } else if (treeItem.getValue () instanceof Definition) {
-            ((DefinitionGroup) treeItem.getParent ().getValue ()).getDefinitions ().remove (treeItem.getValue ());
+            } else if (treeItem.getValue () instanceof Definition) {
+                ((DefinitionGroup) treeItem.getParent ().getValue ()).getDefinitions ().remove (treeItem.getValue ());
 
-        } else if (treeItem.getValue () instanceof DefinitionGroup) {
-            ((Entry) treeItem.getParent ().getValue ()).getDefinitionGroups ().remove (treeItem.getValue ());
+            } else if (treeItem.getValue () instanceof DefinitionGroup) {
+                ((Entry) treeItem.getParent ().getValue ()).getDefinitionGroups ().remove (treeItem.getValue ());
 
-        } else if (treeItem.getValue () instanceof DictEntry) {
-            ((Dictionary) treeItem.getParent ().getValue ()).getEntries ().remove (treeItem.getValue ());
+            } else if (treeItem.getValue () instanceof DictEntry) {
+                ((Dictionary) treeItem.getParent ().getValue ()).getEntries ().remove (treeItem.getValue ());
 
-        } else if (treeItem.getValue () instanceof Entry) {
-            ((EntryGroup) treeItem.getParent ().getValue ()).getEntries ().remove (treeItem.getValue ());
+            } else if (treeItem.getValue () instanceof Entry) {
+                ((EntryGroup) treeItem.getParent ().getValue ()).getEntries ().remove (treeItem.getValue ());
 
-        } else if (treeItem.getValue () instanceof EntryGroup) {
-            ((DictEntry) treeItem.getParent ().getValue ()).setEntryGroup (null);
+            } else if (treeItem.getValue () instanceof EntryGroup) {
+                ((DictEntry) treeItem.getParent ().getValue ()).setEntryGroup (null);
 
-        } else if (treeItem.getValue () instanceof Example) {
-            ((ExampleGroup) treeItem.getParent ().getValue ()).getExamples ().remove (treeItem.getValue ());
+            } else if (treeItem.getValue () instanceof Example) {
+                ((ExampleGroup) treeItem.getParent ().getValue ()).getExamples ().remove (treeItem.getValue ());
 
-        } else if (treeItem.getValue () instanceof ExampleGroup) {
-            if (treeItem.getParent ().getValue () instanceof Definition) {
-                ((Definition) treeItem.getParent ().getValue ()).setExampleGroup (null);
+            } else if (treeItem.getValue () instanceof ExampleGroup) {
+                if (treeItem.getParent ().getValue () instanceof Definition) {
+                    ((Definition) treeItem.getParent ().getValue ()).setExampleGroup (null);
 
-            } else if (treeItem.getParent ().getValue () instanceof SubDefinition) {
-                ((SubDefinition) treeItem.getParent ().getValue ()).setExampleGroup (null);
+                } else if (treeItem.getParent ().getValue () instanceof SubDefinition) {
+                    ((SubDefinition) treeItem.getParent ().getValue ()).setExampleGroup (null);
+
+                }
+            } else if (treeItem.getValue () instanceof Form) {
+                ((FormGroup) treeItem.getParent ().getValue ()).getForms ().remove (treeItem.getValue ());
+
+            } else if (treeItem.getValue () instanceof FormGroup) {
+                ((GrammarGroup) treeItem.getParent ().getValue ()).setFormGroup (null);
+
+            } else if (treeItem.getValue () instanceof GrammarGroup) {
+                ((Entry) treeItem.getParent ().getValue ()).setGrammarGroup (null);
+
+            } else if (treeItem.getValue () instanceof HeadGroup) {
+                ((DictEntry) treeItem.getParent ().getValue ()).setHeadGroup (null);
+
+            } else if (treeItem.getValue () instanceof Index) {
+                ((DictEntry) treeItem.getParent ().getValue ()).getIndices ().remove (treeItem.getValue ());
+
+            } else if (treeItem.getValue () instanceof Note) {
+                ((NoteGroup) treeItem.getParent ().getValue ()).getNotes ().remove (treeItem.getValue ());
+
+            } else if (treeItem.getValue () instanceof NoteGroup) {
+                ((SubEntry) treeItem.getParent ().getValue ()).setNoteGroup (null);
+
+            } else if (treeItem.getValue () instanceof Pronunciation) {
+                if (treeItem.getParent ().getValue () instanceof HeadGroup) {
+                    ((HeadGroup) treeItem.getParent ().getValue ()).setPronunciation (null);
+
+                } else if (treeItem.getParent ().getValue () instanceof Form) {
+                    ((Form) treeItem.getParent ().getValue ()).setPronunciation (null);
+
+                }
+            } else if (treeItem.getValue () instanceof SubDefinition) {
+                ((SubDefinitionGroup) treeItem.getParent ().getValue ()).getSubDefinitions ().remove (treeItem.getValue ());
+
+            } else if (treeItem.getValue () instanceof SubDefinitionGroup) {
+                ((Definition) treeItem.getParent ().getValue ()).setSubDefinitionGroup (null);
+
+            } else if (treeItem.getValue () instanceof SubEntry) {
+                ((SubEntryGroup) treeItem.getParent ().getValue ()).getSubEntries ().remove (treeItem.getValue ());
+
+            } else if (treeItem.getValue () instanceof SubEntryGroup) {
+                ((Entry) treeItem.getParent ().getValue ()).setSubEntryGroup (null);
+
+            } else if (treeItem.getValue () instanceof SubEntryList) {
+                ((SubEntry) treeItem.getParent ().getValue ()).setSubEntryList (null);
+
+            } else if (treeItem.getValue () instanceof SubEntryListItem) {
+                ((SubEntryList) treeItem.getParent ().getValue ()).getSubEntryListItems ().remove (treeItem.getValue ());
 
             }
-        } else if (treeItem.getValue () instanceof Form) {
-            ((FormGroup) treeItem.getParent ().getValue ()).getForms ().remove (treeItem.getValue ());
-
-        } else if (treeItem.getValue () instanceof FormGroup) {
-            ((GrammarGroup) treeItem.getParent ().getValue ()).setFormGroup (null);
-
-        } else if (treeItem.getValue () instanceof GrammarGroup) {
-            ((Entry) treeItem.getParent ().getValue ()).setGrammarGroup (null);
-
-        } else if (treeItem.getValue () instanceof HeadGroup) {
-            ((DictEntry) treeItem.getParent ().getValue ()).setHeadGroup (null);
-
-        } else if (treeItem.getValue () instanceof Index) {
-            ((DictEntry) treeItem.getParent ().getValue ()).getIndices ().remove (treeItem.getValue ());
-
-        } else if (treeItem.getValue () instanceof Note) {
-            ((NoteGroup) treeItem.getParent ().getValue ()).getNotes ().remove (treeItem.getValue ());
-
-        } else if (treeItem.getValue () instanceof NoteGroup) {
-            ((SubEntry) treeItem.getParent ().getValue ()).setNoteGroup (null);
-
-        } else if (treeItem.getValue () instanceof Pronunciation) {
-            if (treeItem.getParent ().getValue () instanceof HeadGroup) {
-                ((HeadGroup) treeItem.getParent ().getValue ()).setPronunciation (null);
-
-            } else if (treeItem.getParent ().getValue () instanceof Form) {
-                ((Form) treeItem.getParent ().getValue ()).setPronunciation (null);
-
-            }
-        } else if (treeItem.getValue () instanceof SubDefinition) {
-            ((SubDefinitionGroup) treeItem.getParent ().getValue ()).getSubDefinitions ().remove (treeItem.getValue ());
-
-        } else if (treeItem.getValue () instanceof SubDefinitionGroup) {
-            ((Definition) treeItem.getParent ().getValue ()).setSubDefinitionGroup (null);
-
-        } else if (treeItem.getValue () instanceof SubEntry) {
-            ((SubEntryGroup) treeItem.getParent ().getValue ()).getSubEntries ().remove (treeItem.getValue ());
-
-        } else if (treeItem.getValue () instanceof SubEntryGroup) {
-            ((Entry) treeItem.getParent ().getValue ()).setSubEntryGroup (null);
-
-        } else if (treeItem.getValue () instanceof SubEntryList) {
-            ((SubEntry) treeItem.getParent ().getValue ()).setSubEntryList (null);
-
-        } else if (treeItem.getValue () instanceof SubEntryListItem) {
-            ((SubEntryList) treeItem.getParent ().getValue ()).getSubEntryListItems ().remove (treeItem.getValue ());
-
+            treeItem.getParent ().getChildren ().remove (treeItem);
         }
-        treeItem.getParent ().getChildren ().remove (treeItem);
     }
 
     public void addNewItem () {
@@ -914,71 +1052,747 @@ public class Controller implements Initializable {
 
         double clickY = Math.round (windowCoord.getY () + sceneCoord.getY () + nodeCoord.getY ());
 
-        setupPopOver (clickX - 36, clickY + 20);
-
+        setupPopOver (clickX - 18, clickY - 22);
     }
 
-    public void setupPopOver (double x, double y) {
+    private void setupPopOver (double x, double y) {
         VBox column = new VBox ();
-        PopOver popOver = new PopOver (column);
+        column.setPadding (new Insets (10, 10, 10, 10));
 
+        PopOver popOver = new PopOver (column);
         popOver.setHideOnEscape (true);
-        popOver.setArrowLocation (PopOver.ArrowLocation.TOP_CENTER);
+        popOver.setArrowLocation (PopOver.ArrowLocation.LEFT_TOP);
         popOver.setCornerRadius (4);
         popOver.setDetachable (false);
+        popOver.setTitle ("Add");
+        popOver.setHeaderAlwaysVisible (true);
 
         TreeItem<Object> treeItem = treeView.getSelectionModel ().getSelectedItem ();
 
-        if (treeItem != null) {
-            if (treeItem.getValue () instanceof Definition) {
+        if (treeItem == null) {
+        } else if (treeItem.getValue () instanceof Definition) {
 
-                HBox row = new HBox ();
-                column.getChildren ().add (row);
+            HBox exampleGroupRow = new HBox ();
+            exampleGroupRow.setAlignment (Pos.CENTER_LEFT);
+            exampleGroupRow.setSpacing (10);
 
-                
+            Button exampleGroupButton = new Button ("+");
+            exampleGroupButton.setOnAction (actionEvent -> {
+                if (((Definition) treeItem.getValue ()).getExampleGroup () == null) {
+                    ExampleGroup exampleGroup = new ExampleGroup ();
+                    ((Definition) treeItem.getValue ()).setExampleGroup (exampleGroup);
 
-            } else if (treeItem.getValue () instanceof DefinitionGroup) {
+                    int index = findIndexFor (ExampleGroup.class, treeItem.getChildren ());
 
-            } else if (treeItem.getValue () instanceof DictEntry) {
+                    TreeItem<Object> exampleGroupTreeItem = new TreeItem<> (exampleGroup);
+                    treeItem.getChildren ().add (index, exampleGroupTreeItem);
+                    treeView.getSelectionModel ().select (exampleGroupTreeItem);
 
-            } else if (treeItem.getValue () instanceof Entry) {
+                    popOver.hide ();
 
-            } else if (treeItem.getValue () instanceof EntryGroup) {
+                } else {
+                    System.err.println ("The selected item already has an Example Group!");
+                }
+            });
+            exampleGroupRow.getChildren ().add (exampleGroupButton);
 
-            } else if (treeItem.getValue () instanceof Example) {
+            Label exampleGroupLabel = new Label ("Example Group");
+            exampleGroupRow.getChildren ().add (exampleGroupLabel);
 
-            } else if (treeItem.getValue () instanceof ExampleGroup) {
+            column.getChildren ().add (exampleGroupRow);
 
-            } else if (treeItem.getValue () instanceof Form) {
 
-            } else if (treeItem.getValue () instanceof FormGroup) {
+            HBox subDefinitionGroupRow = new HBox ();
+            subDefinitionGroupRow.setAlignment (Pos.CENTER_LEFT);
+            subDefinitionGroupRow.setSpacing (10);
 
-            } else if (treeItem.getValue () instanceof GrammarGroup) {
+            Button subDefinitionGroupButton = new Button ("+");
+            subDefinitionGroupButton.setOnAction (actionEvent -> {
+                if (((Definition) treeItem.getValue ()).getSubDefinitionGroup () == null) {
+                    SubDefinitionGroup subDefinitionGroup = new SubDefinitionGroup ();
+                    ((Definition) treeItem.getValue ()).setSubDefinitionGroup (subDefinitionGroup);
 
-            } else if (treeItem.getValue () instanceof HeadGroup) {
+                    TreeItem<Object> subDefinitionGroupTreeItem = new TreeItem<> (subDefinitionGroup);
+                    treeItem.getChildren ().add (subDefinitionGroupTreeItem);
+                    treeView.getSelectionModel ().select (subDefinitionGroupTreeItem);
 
-            } else if (treeItem.getValue () instanceof Index) {
+                    popOver.hide ();
 
-            } else if (treeItem.getValue () instanceof Note) {
+                } else {
+                    System.err.println ("The selected item already has a Sub-Definition Group!");
+                }
+            });
+            subDefinitionGroupRow.getChildren ().add (subDefinitionGroupButton);
 
-            } else if (treeItem.getValue () instanceof NoteGroup) {
+            Label subDefinitionGroupLabel = new Label ("Sub-Definition Group");
+            subDefinitionGroupRow.getChildren ().add (subDefinitionGroupLabel);
 
-            } else if (treeItem.getValue () instanceof Pronunciation) {
+            column.getChildren ().add (subDefinitionGroupRow);
 
-            } else if (treeItem.getValue () instanceof SubDefinition) {
+            popOver.show (addItemButton.getParent (), x, y);
 
-            } else if (treeItem.getValue () instanceof SubDefinitionGroup) {
+        } else if (treeItem.getValue () instanceof DefinitionGroup) {
 
-            } else if (treeItem.getValue () instanceof SubEntry) {
+            HBox definitionRow = new HBox ();
+            definitionRow.setAlignment (Pos.CENTER_LEFT);
+            definitionRow.setSpacing (10);
 
-            } else if (treeItem.getValue () instanceof SubEntryGroup) {
+            Button definitionButton = new Button ("+");
+            definitionButton.setOnAction (actionEvent -> {
+                Definition definition = new Definition ();
+                ((DefinitionGroup) treeItem.getValue ()).getDefinitions ().add (definition);
 
-            } else if (treeItem.getValue () instanceof SubEntryList) {
+                TreeItem<Object> definitionTreeItem = new TreeItem<> (definition);
+                treeItem.getChildren ().add (definitionTreeItem);
+                treeView.getSelectionModel ().select (definitionTreeItem);
 
-            } else if (treeItem.getValue () instanceof SubEntryListItem) {
+                popOver.hide ();
+            });
+            definitionRow.getChildren ().add (definitionButton);
 
-            }
-            popOver.show (addItemButton, x, y);
+            Label definitionLabel = new Label ("Definition");
+            definitionRow.getChildren ().add (definitionLabel);
+
+            column.getChildren ().add (definitionRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof DictEntry) {
+
+            HBox indexRow = new HBox ();
+            indexRow.setAlignment (Pos.CENTER_LEFT);
+            indexRow.setSpacing (10);
+
+            Button indexButton = new Button ("+");
+            indexButton.setOnAction (actionEvent -> {
+                Index index = new Index ();
+                ((DictEntry) treeItem.getValue ()).getIndices ().add (index);
+
+                int i = findIndexFor (Index.class, treeItem.getChildren ());
+
+                TreeItem<Object> indexTreeItem = new TreeItem<> (index);
+                treeItem.getChildren ().add (i, indexTreeItem);
+                treeView.getSelectionModel ().select (indexTreeItem);
+
+                popOver.hide ();
+            });
+            indexRow.getChildren ().add (indexButton);
+
+            Label indexLabel = new Label ("Index");
+            indexRow.getChildren ().add (indexLabel);
+
+            column.getChildren ().add (indexRow);
+
+
+            HBox headGroupRow = new HBox ();
+            headGroupRow.setAlignment (Pos.CENTER_LEFT);
+            headGroupRow.setSpacing (10);
+
+            Button headGroupButton = new Button ("+");
+            headGroupButton.setOnAction (actionEvent -> {
+                if (((DictEntry) treeItem.getValue ()).getHeadGroup () == null) {
+                    HeadGroup headGroup = new HeadGroup ();
+                    ((DictEntry) treeItem.getValue ()).setHeadGroup (headGroup);
+
+                    int index = findIndexFor (HeadGroup.class, treeItem.getChildren ());
+
+                    TreeItem<Object> headGroupTreeItem = new TreeItem<> (headGroup);
+                    treeItem.getChildren ().add (index, headGroupTreeItem);
+                    treeView.getSelectionModel ().select (headGroupTreeItem);
+
+                    popOver.hide ();
+
+                } else {
+                    System.err.println ("The selected item already has a Head Group!");
+                }
+            });
+            headGroupRow.getChildren ().add (headGroupButton);
+
+            Label headGroupLabel = new Label ("Head Group");
+            headGroupRow.getChildren ().add (headGroupLabel);
+
+            column.getChildren ().add (headGroupRow);
+
+
+            HBox entryGroupRow = new HBox ();
+            entryGroupRow.setAlignment (Pos.CENTER_LEFT);
+            entryGroupRow.setSpacing (10);
+
+            Button entryGroupButton = new Button ("+");
+            entryGroupButton.setOnAction (actionEvent -> {
+                if (((DictEntry) treeItem.getValue ()).getEntryGroup () == null) {
+                    EntryGroup entryGroup = new EntryGroup ();
+                    ((DictEntry) treeItem.getValue ()).setEntryGroup (entryGroup);
+
+                    TreeItem<Object> entryGroupTreeItem = new TreeItem<> (entryGroup);
+                    treeItem.getChildren ().add (entryGroupTreeItem);
+                    treeView.getSelectionModel ().select (entryGroupTreeItem);
+
+                    popOver.hide ();
+
+                } else {
+                    System.err.println ("The selected item already has an Entry Group!");
+                }
+            });
+            entryGroupRow.getChildren ().add (entryGroupButton);
+
+            Label entryGroupLabel = new Label ("Entry Group");
+            entryGroupRow.getChildren ().add (entryGroupLabel);
+
+            column.getChildren ().add (entryGroupRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof Dictionary) {
+
+            HBox entryRow = new HBox ();
+            entryRow.setAlignment (Pos.CENTER_LEFT);
+            entryRow.setSpacing (10);
+
+            Button entryButton = new Button ("+");
+            entryButton.setOnAction (actionEvent -> {
+                DictEntry entry = new DictEntry ();
+                ((Dictionary) treeItem.getValue ()).getEntries ().add (entry);
+
+                TreeItem<Object> entryTreeItem = new TreeItem<> (entry);
+                treeItem.getChildren ().add (entryTreeItem);
+                treeView.getSelectionModel ().select (entryTreeItem);
+
+                popOver.hide ();
+            });
+            entryRow.getChildren ().add (entryButton);
+
+            Label entryLabel = new Label ("Dictionary Entry");
+            entryRow.getChildren ().add (entryLabel);
+
+            column.getChildren ().add (entryRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof Entry) {
+
+            HBox grammarGroupRow = new HBox ();
+            grammarGroupRow.setAlignment (Pos.CENTER_LEFT);
+            grammarGroupRow.setSpacing (10);
+
+            Button grammarGroupButton = new Button ("+");
+            grammarGroupButton.setOnAction (actionEvent -> {
+                if (((Entry) treeItem.getValue ()).getGrammarGroup () == null) {
+                    GrammarGroup grammarGroup = new GrammarGroup ();
+                    ((Entry) treeItem.getValue ()).setGrammarGroup (grammarGroup);
+
+                    int index = findIndexFor (GrammarGroup.class, treeItem.getChildren ());
+
+                    TreeItem<Object> grammarGroupTreeItem = new TreeItem<> (grammarGroup);
+                    treeItem.getChildren ().add (index, grammarGroupTreeItem);
+                    treeView.getSelectionModel ().select (grammarGroupTreeItem);
+
+                    popOver.hide ();
+
+                } else {
+                    System.err.println ("The selected item already has a Grammar Group!");
+                }
+            });
+            grammarGroupRow.getChildren ().add (grammarGroupButton);
+
+            Label grammarGroupLabel = new Label ("Grammar Group");
+            grammarGroupRow.getChildren ().add (grammarGroupLabel);
+
+            column.getChildren ().add (grammarGroupRow);
+
+
+            HBox definitionGroupRow = new HBox ();
+            definitionGroupRow.setAlignment (Pos.CENTER_LEFT);
+            definitionGroupRow.setSpacing (10);
+
+            Button definitionGroupButton = new Button ("+");
+            definitionGroupButton.setOnAction (actionEvent -> {
+                DefinitionGroup definitionGroup = new DefinitionGroup ();
+                ((Entry) treeItem.getValue ()).getDefinitionGroups ().add (definitionGroup);
+
+                int index = findIndexFor (DefinitionGroup.class, treeItem.getChildren ());
+
+                TreeItem<Object> definitionGroupTreeItem = new TreeItem<> (definitionGroup);
+                treeItem.getChildren ().add (index, definitionGroupTreeItem);
+                treeView.getSelectionModel ().select (definitionGroupTreeItem);
+
+                popOver.hide ();
+            });
+            definitionGroupRow.getChildren ().add (definitionGroupButton);
+
+            Label definitionGroupLabel = new Label ("Definition Group");
+            definitionGroupRow.getChildren ().add (definitionGroupLabel);
+
+            column.getChildren ().add (definitionGroupRow);
+
+
+            HBox subEntryGroupRow = new HBox ();
+            subEntryGroupRow.setAlignment (Pos.CENTER_LEFT);
+            subEntryGroupRow.setSpacing (10);
+
+            Button subEntryGroupButton = new Button ("+");
+            subEntryGroupButton.setOnAction (actionEvent -> {
+                if (((Entry) treeItem.getValue ()).getSubEntryGroup () == null) {
+                    SubEntryGroup subEntryGroup = new SubEntryGroup ();
+                    ((Entry) treeItem.getValue ()).setSubEntryGroup (subEntryGroup);
+
+                    TreeItem<Object> subEntryGroupTreeItem = new TreeItem<> (subEntryGroup);
+                    treeItem.getChildren ().add (subEntryGroupTreeItem);
+                    treeView.getSelectionModel ().select (subEntryGroupTreeItem);
+
+                    popOver.hide ();
+
+                } else {
+                    System.err.println ("The selected item already has a Sub-Entry Group!");
+                }
+            });
+            subEntryGroupRow.getChildren ().add (subEntryGroupButton);
+
+            Label subEntryGroupLabel = new Label ("Entry Group");
+            subEntryGroupRow.getChildren ().add (subEntryGroupLabel);
+
+            column.getChildren ().add (subEntryGroupRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof EntryGroup) {
+
+            HBox entryRow = new HBox ();
+            entryRow.setAlignment (Pos.CENTER_LEFT);
+            entryRow.setSpacing (10);
+
+            Button entryButton = new Button ("+");
+            entryButton.setOnAction (actionEvent -> {
+                Entry entry = new Entry ();
+                ((EntryGroup) treeItem.getValue ()).getEntries ().add (entry);
+
+                TreeItem<Object> entryTreeItem = new TreeItem<> (entry);
+                treeItem.getChildren ().add (entryTreeItem);
+                treeView.getSelectionModel ().select (entryTreeItem);
+
+                popOver.hide ();
+            });
+            entryRow.getChildren ().add (entryButton);
+
+            Label entryLabel = new Label ("Entry");
+            entryRow.getChildren ().add (entryLabel);
+
+            column.getChildren ().add (entryRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof ExampleGroup) {
+
+            HBox exampleRow = new HBox ();
+            exampleRow.setAlignment (Pos.CENTER_LEFT);
+            exampleRow.setSpacing (10);
+
+            Button exampleButton = new Button ("+");
+            exampleButton.setOnAction (actionEvent -> {
+                Example example = new Example ();
+                ((ExampleGroup) treeItem.getValue ()).getExamples ().add (example);
+
+                TreeItem<Object> exampleTreeItem = new TreeItem<> (example);
+                treeItem.getChildren ().add (exampleTreeItem);
+                treeView.getSelectionModel ().select (exampleTreeItem);
+
+                popOver.hide ();
+            });
+            exampleRow.getChildren ().add (exampleButton);
+
+            Label exampleLabel = new Label ("Example");
+            exampleRow.getChildren ().add (exampleLabel);
+
+            column.getChildren ().add (exampleRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof Form) {
+
+            HBox pronunciationRow = new HBox ();
+            pronunciationRow.setAlignment (Pos.CENTER_LEFT);
+            pronunciationRow.setSpacing (10);
+
+            Button pronunciationButton = new Button ("+");
+            pronunciationButton.setOnAction (actionEvent -> {
+                if (((Form) treeItem.getValue ()).getPronunciation () == null) {
+                    Pronunciation pronunciation = new Pronunciation ();
+                    ((Form) treeItem.getValue ()).setPronunciation (pronunciation);
+
+                    TreeItem<Object> pronunciationTreeItem = new TreeItem<> (pronunciation);
+                    treeItem.getChildren ().add (pronunciationTreeItem);
+                    treeView.getSelectionModel ().select (pronunciationTreeItem);
+
+                    popOver.hide ();
+                } else {
+                    System.err.println ("The selected item already has a Pronunciation!");
+                }
+            });
+            pronunciationRow.getChildren ().add (pronunciationButton);
+
+            Label pronunciationLabel = new Label ("Pronunciation");
+            pronunciationRow.getChildren ().add (pronunciationLabel);
+
+            column.getChildren ().add (pronunciationRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof FormGroup) {
+
+            HBox formRow = new HBox ();
+            formRow.setAlignment (Pos.CENTER_LEFT);
+            formRow.setSpacing (10);
+
+            Button formButton = new Button ("+");
+            formButton.setOnAction (actionEvent -> {
+                Form form = new Form ();
+                ((FormGroup) treeItem.getValue ()).getForms ().add (form);
+
+                TreeItem<Object> formTreeItem = new TreeItem<> (form);
+                treeItem.getChildren ().add (formTreeItem);
+                treeView.getSelectionModel ().select (formTreeItem);
+
+                popOver.hide ();
+            });
+            formRow.getChildren ().add (formButton);
+
+            Label formLabel = new Label ("Form");
+            formRow.getChildren ().add (formLabel);
+
+            column.getChildren ().add (formRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof GrammarGroup) {
+
+            HBox formGroupRow = new HBox ();
+            formGroupRow.setAlignment (Pos.CENTER_LEFT);
+            formGroupRow.setSpacing (10);
+
+            Button formGroupButton = new Button ("+");
+            formGroupButton.setOnAction (actionEvent -> {
+                if (((GrammarGroup) treeItem.getValue ()).getFormGroup () == null) {
+                    FormGroup formGroup = new FormGroup ();
+                    ((GrammarGroup) treeItem.getValue ()).setFormGroup (formGroup);
+
+                    TreeItem<Object> formGroupTreeItem = new TreeItem<> (formGroup);
+                    treeItem.getChildren ().add (formGroupTreeItem);
+                    treeView.getSelectionModel ().select (formGroupTreeItem);
+
+                    popOver.hide ();
+                } else {
+                    System.err.println ("The selected item already has a Form Group!");
+                }
+            });
+            formGroupRow.getChildren ().add (formGroupButton);
+
+            Label formGroupLabel = new Label ("Form Group");
+            formGroupRow.getChildren ().add (formGroupLabel);
+
+            column.getChildren ().add (formGroupRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof HeadGroup) {
+
+            HBox pronunciationRow = new HBox ();
+            pronunciationRow.setAlignment (Pos.CENTER_LEFT);
+            pronunciationRow.setSpacing (10);
+
+            Button pronunciationButton = new Button ("+");
+            pronunciationButton.setOnAction (actionEvent -> {
+                if (((HeadGroup) treeItem.getValue ()).getPronunciation () == null) {
+                    Pronunciation pronunciation = new Pronunciation ();
+                    ((HeadGroup) treeItem.getValue ()).setPronunciation (pronunciation);
+
+                    TreeItem<Object> pronunciationTreeItem = new TreeItem<> (pronunciation);
+                    treeItem.getChildren ().add (pronunciationTreeItem);
+                    treeView.getSelectionModel ().select (pronunciationTreeItem);
+
+                    popOver.hide ();
+                } else {
+                    System.err.println ("The selected item already has a Pronunciation!");
+                }
+            });
+            pronunciationRow.getChildren ().add (pronunciationButton);
+
+            Label pronunciationLabel = new Label ("Pronunciation");
+            pronunciationRow.getChildren ().add (pronunciationLabel);
+
+            column.getChildren ().add (pronunciationRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof NoteGroup) {
+
+            HBox noteRow = new HBox ();
+            noteRow.setAlignment (Pos.CENTER_LEFT);
+            noteRow.setSpacing (10);
+
+            Button noteButton = new Button ("+");
+            noteButton.setOnAction (actionEvent -> {
+                Note note = new Note ();
+                ((NoteGroup) treeItem.getValue ()).getNotes ().add (note);
+
+                TreeItem<Object> noteTreeItem = new TreeItem<> (note);
+                treeItem.getChildren ().add (noteTreeItem);
+                treeView.getSelectionModel ().select (noteTreeItem);
+
+                popOver.hide ();
+            });
+            noteRow.getChildren ().add (noteButton);
+
+            Label noteLabel = new Label ("Note");
+            noteRow.getChildren ().add (noteLabel);
+
+            column.getChildren ().add (noteRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof SubDefinition) {
+
+            HBox exampleGroupRow = new HBox ();
+            exampleGroupRow.setAlignment (Pos.CENTER_LEFT);
+            exampleGroupRow.setSpacing (10);
+
+            Button exampleGroupButton = new Button ("+");
+            exampleGroupButton.setOnAction (actionEvent -> {
+                if (((SubDefinition) treeItem.getValue ()).getExampleGroup () == null) {
+                    ExampleGroup exampleGroup = new ExampleGroup ();
+                    ((SubDefinition) treeItem.getValue ()).setExampleGroup (exampleGroup);
+
+                    TreeItem<Object> exampleGroupTreeItem = new TreeItem<> (exampleGroup);
+                    treeItem.getChildren ().add (exampleGroupTreeItem);
+                    treeView.getSelectionModel ().select (exampleGroupTreeItem);
+
+                    popOver.hide ();
+                } else {
+                    System.err.println ("The selected item already has am Example Group!");
+                }
+            });
+            exampleGroupRow.getChildren ().add (exampleGroupButton);
+
+            Label exampleGroupLabel = new Label ("Example Group");
+            exampleGroupRow.getChildren ().add (exampleGroupLabel);
+
+            column.getChildren ().add (exampleGroupRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof SubDefinitionGroup) {
+
+            HBox subDefinitionRow = new HBox ();
+            subDefinitionRow.setAlignment (Pos.CENTER_LEFT);
+            subDefinitionRow.setSpacing (10);
+
+            Button subDefinitionButton = new Button ("+");
+            subDefinitionButton.setOnAction (actionEvent -> {
+                SubDefinition subDefinition = new SubDefinition ();
+                ((SubDefinitionGroup) treeItem.getValue ()).getSubDefinitions ().add (subDefinition);
+
+                TreeItem<Object> subDefinitionTreeItem = new TreeItem<> (subDefinition);
+                treeItem.getChildren ().add (subDefinitionTreeItem);
+                treeView.getSelectionModel ().select (subDefinitionTreeItem);
+
+                popOver.hide ();
+            });
+            subDefinitionRow.getChildren ().add (subDefinitionButton);
+
+            Label subDefinitionLabel = new Label ("Sub-Definition");
+            subDefinitionRow.getChildren ().add (subDefinitionLabel);
+
+            column.getChildren ().add (subDefinitionRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof SubEntry) {
+
+            HBox subEntryListRow = new HBox ();
+            subEntryListRow.setAlignment (Pos.CENTER_LEFT);
+            subEntryListRow.setSpacing (10);
+
+            Button subEntryListButton = new Button ("+");
+            subEntryListButton.setOnAction (actionEvent -> {
+                if (((SubEntry) treeItem.getValue ()).getSubEntryList () == null) {
+                    SubEntryList subEntryList = new SubEntryList ();
+                    ((SubEntry) treeItem.getValue ()).setSubEntryList (subEntryList);
+
+                    int index = findIndexFor (SubEntryList.class, treeItem.getChildren ());
+
+                    TreeItem<Object> subEntryListTreeItem = new TreeItem<> (subEntryList);
+                    treeItem.getChildren ().add (index, subEntryListTreeItem);
+                    treeView.getSelectionModel ().select (subEntryListTreeItem);
+
+                    popOver.hide ();
+                } else {
+                    System.err.println ("The selected item already has a Sub-Entry List!");
+                }
+            });
+            subEntryListRow.getChildren ().add (subEntryListButton);
+
+            Label subEntryListLabel = new Label ("Sub-Entry List");
+            subEntryListRow.getChildren ().add (subEntryListLabel);
+
+            column.getChildren ().add (subEntryListRow);
+
+
+            HBox noteGroupRow = new HBox ();
+            noteGroupRow.setAlignment (Pos.CENTER_LEFT);
+            noteGroupRow.setSpacing (10);
+
+            Button noteGroupButton = new Button ("+");
+            noteGroupButton.setOnAction (actionEvent -> {
+                if (((SubEntry) treeItem.getValue ()).getNoteGroup () == null) {
+                    NoteGroup noteGroup = new NoteGroup ();
+                    ((SubEntry) treeItem.getValue ()).setNoteGroup (noteGroup);
+
+                    TreeItem<Object> noteGroupTreeItem = new TreeItem<> (noteGroup);
+                    treeItem.getChildren ().add (noteGroupTreeItem);
+                    treeView.getSelectionModel ().select (noteGroupTreeItem);
+
+                    popOver.hide ();
+                } else {
+                    System.err.println ("The selected item already has a Note Group!");
+                }
+            });
+            noteGroupRow.getChildren ().add (noteGroupButton);
+
+            Label noteGroupLabel = new Label ("Note");
+            noteGroupRow.getChildren ().add (noteGroupLabel);
+
+            column.getChildren ().add (noteGroupRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof SubEntryGroup) {
+
+            HBox subEntryRow = new HBox ();
+            subEntryRow.setAlignment (Pos.CENTER_LEFT);
+            subEntryRow.setSpacing (10);
+
+            Button subEntryButton = new Button ("+");
+            subEntryButton.setOnAction (actionEvent -> {
+                SubEntry subEntry = new SubEntry ();
+                ((SubEntryGroup) treeItem.getValue ()).getSubEntries ().add (subEntry);
+
+                TreeItem<Object> subEntryTreeItem = new TreeItem<> (subEntry);
+                treeItem.getChildren ().add (subEntryTreeItem);
+                treeView.getSelectionModel ().select (subEntryTreeItem);
+
+                popOver.hide ();
+            });
+            subEntryRow.getChildren ().add (subEntryButton);
+
+            Label subEntryLabel = new Label ("Sub-Entry");
+            subEntryRow.getChildren ().add (subEntryLabel);
+
+            column.getChildren ().add (subEntryRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
+
+        } else if (treeItem.getValue () instanceof SubEntryList) {
+
+            HBox subEntryListItemRow = new HBox ();
+            subEntryListItemRow.setAlignment (Pos.CENTER_LEFT);
+            subEntryListItemRow.setSpacing (10);
+
+            Button subEntryListItemButton = new Button ("+");
+            subEntryListItemButton.setOnAction (actionEvent -> {
+                SubEntryListItem subEntryListItem = new SubEntryListItem ();
+                ((SubEntryList) treeItem.getValue ()).getSubEntryListItems ().add (subEntryListItem);
+
+                TreeItem<Object> subEntryListItemTreeItem = new TreeItem<> (subEntryListItem);
+                treeItem.getChildren ().add (subEntryListItemTreeItem);
+                treeView.getSelectionModel ().select (subEntryListItemTreeItem);
+
+                popOver.hide ();
+            });
+            subEntryListItemRow.getChildren ().add (subEntryListItemButton);
+
+            Label subEntryListItemLabel = new Label ("Sub-Entry List Item");
+            subEntryListItemRow.getChildren ().add (subEntryListItemLabel);
+
+            column.getChildren ().add (subEntryListItemRow);
+
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
         }
+    }
+
+    private <T> int findIndexFor (Class<T> type, ObservableList<TreeItem<Object>> list) {
+
+        if (type == null) {
+            return -1; // This shouldn't happen
+        } else if (type == ExampleGroup.class) {
+
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof SubDefinitionGroup)
+                    return i;
+            return list.size ();
+
+        } else if (type == HeadGroup.class) {
+
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof EntryGroup)
+                    return i;
+            return list.size ();
+
+        } else if (type == Index.class) {
+
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof HeadGroup)
+                    return i;
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof EntryGroup)
+                    return i;
+            return list.size ();
+
+        } else if (type == GrammarGroup.class) {
+
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof Definition)
+                    return i;
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof SubEntryGroup)
+                    return i;
+            return list.size ();
+
+        } else if (type == DefinitionGroup.class) {
+
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof SubEntryGroup)
+                    return i;
+            return list.size ();
+
+        } else if (type == SubEntryList.class) {
+
+            for (int i = 0; i < list.size (); i++)
+                if (list.get (i).getValue () instanceof NoteGroup)
+                    return i;
+            return list.size ();
+
+        } else {
+            System.err.println ("Invalid Class!"); // This should NEVER happen
+            return -1;
+        }
+    }
+
+    public void newFile () {
+        Main.getStage ().setTitle ("Dictionary Writer - New Dictionary");
+
+        dictionary = new Dictionary ();
+
+        TreeItem<Object> treeRoot = new TreeItem<> (dictionary);
+        treeRoot.setExpanded (true);
+        treeRoot.expandedProperty ().addListener ((observable, oldValue, newValue) -> {
+            if (!newValue)
+                treeRoot.setExpanded (true);
+        });
+
+        treeView.setRoot (treeRoot);
+        treeView.getSelectionModel ().select (treeRoot);
+
+        documentLoaded = true;
+
+        newFile = true;
     }
 }
