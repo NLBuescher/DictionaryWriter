@@ -1,6 +1,6 @@
-package app;
+package com.nlbuescher.dictionarywriter;
 
-import dictionary.*;
+import com.nlbuescher.dictionarywriter.dictionary.*;
 import javafx.collections.ObservableList;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
@@ -13,7 +13,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
@@ -74,6 +73,8 @@ public class Controller implements Initializable {
     public ScrollPane editorScrollPane;
     public VBox       editorVBox;
     public WebView    previewWebView;
+
+    public Label statusBarLabel;
 
     private boolean documentLoaded = false;
     private boolean newFile        = false;
@@ -201,6 +202,12 @@ public class Controller implements Initializable {
                 }
             });
             editorVBox.getChildren ().add (entryTitleTextField);
+
+        } else if (treeItem.getValue () instanceof Dictionary) {
+
+            Label dictionaryLabel = new Label ("Dictionary");
+            dictionaryLabel.setFont (Font.font (18));
+            editorVBox.getChildren ().add (dictionaryLabel);
 
         } else if (treeItem.getValue () instanceof Entry) {
 
@@ -599,7 +606,7 @@ public class Controller implements Initializable {
         }
     }
 
-    public void updatePreview (TreeItem<Object> treeItem) {
+    private void updatePreview (TreeItem<Object> treeItem) {
         TreeItem<Object> item = treeItem;
 
         if (!(item.getValue () instanceof Dictionary))
@@ -643,7 +650,7 @@ public class Controller implements Initializable {
                     .replaceAll ("\\^\\((.*?)\\)", "<sup>$1</sup>")
                     .replaceAll ("\\^(.)", "<sup>$1</sup>");
 
-            File preview = new File ("~preview.xhtml");
+            File preview = new File ("./~preview.xhtml").getCanonicalFile ();
             FileOutputStream out = new FileOutputStream (preview);
 
             out.write (previewString.getBytes ("UTF-8"));
@@ -656,7 +663,7 @@ public class Controller implements Initializable {
     }
 
     private void loadFile () {
-        Main.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
+        DictionaryWriter.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
 
         try {
             String inputString = new Scanner (currentFile).useDelimiter ("\\Z").next ()
@@ -899,7 +906,7 @@ public class Controller implements Initializable {
                 currentFile = fileChooser.showSaveDialog (root.getScene ().getWindow ());
             }
             if (currentFile != null) {
-                Main.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
+                DictionaryWriter.getStage ().setTitle ("Dictionary Writer - [" + currentFile.getAbsolutePath () + "]");
 
                 try {
                     Transformer transformer = TransformerFactory.newInstance ().newTransformer ();
@@ -1129,7 +1136,7 @@ public class Controller implements Initializable {
 
             column.getChildren ().add (subDefinitionGroupRow);
 
-            popOver.show (addItemButton.getParent (), x, y);
+            popOver.show (addItemButton.getScene ().getWindow (), x, y);
 
         } else if (treeItem.getValue () instanceof DefinitionGroup) {
 
@@ -1749,7 +1756,7 @@ public class Controller implements Initializable {
         } else if (type == GrammarGroup.class) {
 
             for (int i = 0; i < list.size (); i++)
-                if (list.get (i).getValue () instanceof Definition)
+                if (list.get (i).getValue () instanceof DefinitionGroup)
                     return i;
             for (int i = 0; i < list.size (); i++)
                 if (list.get (i).getValue () instanceof SubEntryGroup)
@@ -1777,7 +1784,7 @@ public class Controller implements Initializable {
     }
 
     public void newFile () {
-        Main.getStage ().setTitle ("Dictionary Writer - New Dictionary");
+        DictionaryWriter.getStage ().setTitle ("Dictionary Writer - New Dictionary");
 
         dictionary = new Dictionary ();
 

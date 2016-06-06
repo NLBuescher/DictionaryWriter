@@ -37,7 +37,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<BorderPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.Controller">
+<BorderPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nlbuescher.dictionarywriter.Controller">
   <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
           <Menu mnemonicParsing="false" text="File">
@@ -86,7 +86,7 @@
           <padding>
               <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
           </padding>
-          <Label text="Status Bar" />
+          <Label fx:id="statusBarLabel" text="Status Bar" />
       </HBox>
   </bottom>
    <left>

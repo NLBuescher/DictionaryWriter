@@ -1,4 +1,4 @@
-package dictionary;
+package com.nlbuescher.dictionarywriter.dictionary;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
 /**
- * Form Group
+ * Note Group
  * Copyright (C) 2016  Nicola Buescher
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -25,27 +25,27 @@ import java.util.ArrayList;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class FormGroup {
-    private ArrayList<Form> forms = new ArrayList<> ();
+public class NoteGroup {
+    private ArrayList<Note> notes = new ArrayList<> ();
 
 
-    public ArrayList<Form> getForms () {
-        return forms;
+    public ArrayList<Note> getNotes () {
+        return notes;
     }
 
 
-    public static FormGroup fromElement (Element element) {
-        FormGroup formGroup = new FormGroup ();
+    public static NoteGroup fromElement (Element element) {
+        NoteGroup noteGroup = new NoteGroup ();
 
         NodeList nodes = element.getChildNodes ();
         for (int i = 0; i < nodes.getLength (); i++) {
             Node node = nodes.item (i);
             if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("form")) {
-                    formGroup.forms.add (Form.fromElement (span));
+                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("note")) {
+                    noteGroup.notes.add (Note.fromElement (span));
                 } else {
-                    System.err.println ("Failed to create 'Form' from " + span + "! The span doesn't have the proper 'class' attribute.");
+                    System.err.println ("Failed to create 'Note' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
             } else if (node.getNodeType () == Node.TEXT_NODE) {
             } else {
@@ -53,31 +53,20 @@ public class FormGroup {
             }
         }
 
-        return formGroup;
+        return noteGroup;
     }
 
     public Element toElement (Document doc) throws ParserConfigurationException {
         Element element = doc.createElement ("span");
-        element.setAttribute ("class", "formGroup");
+        element.setAttribute ("class", "noteGroup");
 
-        element.appendChild (doc.createTextNode ("("));
-
-        int i = 0;
-        for (Form form : forms) {
-            element.appendChild (form.toElement (doc));
-
-            if (i < forms.size () - 1)
-                element.appendChild (doc.createTextNode (","));
-
-            i++;
-        }
-
-        element.appendChild (doc.createTextNode (")"));
+        for (Note note : notes)
+            element.appendChild (note.toElement (doc));
 
         return element;
     }
 
     public String toString () {
-        return "Form Group";
+        return "Note Group";
     }
 }

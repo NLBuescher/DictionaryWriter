@@ -1,4 +1,4 @@
-package dictionary;
+package com.nlbuescher.dictionarywriter.dictionary;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
 /**
- * Sub-Entry List
+ * Sub-Entry Group
  * Copyright (C) 2016  Nicola Buescher
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -25,27 +25,27 @@ import java.util.ArrayList;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SubEntryList {
-    private ArrayList<SubEntryListItem> subEntryListItems = new ArrayList<> ();
+public class SubEntryGroup {
+    private ArrayList<SubEntry> subEntries = new ArrayList<> ();
 
 
-    public ArrayList<SubEntryListItem> getSubEntryListItems () {
-        return subEntryListItems;
+    public ArrayList<SubEntry> getSubEntries () {
+        return subEntries;
     }
 
 
-    public static SubEntryList fromElement (Element element) {
-        SubEntryList subEntryList = new SubEntryList ();
+    public static SubEntryGroup fromElement (Element element) {
+        SubEntryGroup subEntryGroup = new SubEntryGroup ();
 
         NodeList nodes = element.getChildNodes ();
         for (int i = 0; i < nodes.getLength (); i++) {
             Node node = nodes.item (i);
             if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryListItem")) {
-                    subEntryList.subEntryListItems.add (SubEntryListItem.fromElement (span));
+                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntry")) {
+                    subEntryGroup.subEntries.add (SubEntry.fromElement (span));
                 } else {
-                    System.err.println ("Failed to create 'Sub-Entry List Item' from " + span + "! The span doesn't have the proper 'class' attribute.");
+                    System.err.println ("Failed to create 'Sub-Entry' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
             } else if (node.getNodeType () == Node.TEXT_NODE) {
             } else {
@@ -53,20 +53,20 @@ public class SubEntryList {
             }
         }
 
-        return subEntryList;
+        return subEntryGroup;
     }
 
     public Element toElement (Document doc) throws ParserConfigurationException {
         Element element = doc.createElement ("span");
-        element.setAttribute ("class", "subEntryList");
+        element.setAttribute ("class", "subEntryGroup");
 
-        for (SubEntryListItem subEntryListItem : subEntryListItems)
-            element.appendChild (subEntryListItem.toElement (doc));
+        for (SubEntry subEntry : subEntries)
+            element.appendChild (subEntry.toElement (doc));
 
         return element;
     }
 
     public String toString () {
-        return "Sub-Entry List";
+        return "Sub-Entry Group";
     }
 }

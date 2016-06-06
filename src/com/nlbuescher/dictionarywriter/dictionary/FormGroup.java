@@ -1,4 +1,4 @@
-package dictionary;
+package com.nlbuescher.dictionarywriter.dictionary;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
 /**
- * Entry Group
+ * Form Group
  * Copyright (C) 2016  Nicola Buescher
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -25,27 +25,27 @@ import java.util.ArrayList;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class EntryGroup {
-    private ArrayList<Entry> entries = new ArrayList<> ();
+public class FormGroup {
+    private ArrayList<Form> forms = new ArrayList<> ();
 
 
-    public ArrayList<Entry> getEntries () {
-        return entries;
+    public ArrayList<Form> getForms () {
+        return forms;
     }
 
 
-    public static EntryGroup fromElement (Element element) {
-        EntryGroup entryGroup = new EntryGroup ();
+    public static FormGroup fromElement (Element element) {
+        FormGroup formGroup = new FormGroup ();
 
         NodeList nodes = element.getChildNodes ();
         for (int i = 0; i < nodes.getLength (); i++) {
             Node node = nodes.item (i);
             if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("entry")) {
-                    entryGroup.entries.add (Entry.fromElement (span));
+                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("form")) {
+                    formGroup.forms.add (Form.fromElement (span));
                 } else {
-                    System.err.println ("Failed to create 'Entry' from " + span + "! The span doesn't have the proper 'class' attribute.");
+                    System.err.println ("Failed to create 'Form' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
             } else if (node.getNodeType () == Node.TEXT_NODE) {
             } else {
@@ -53,20 +53,31 @@ public class EntryGroup {
             }
         }
 
-        return entryGroup;
+        return formGroup;
     }
 
     public Element toElement (Document doc) throws ParserConfigurationException {
         Element element = doc.createElement ("span");
-        element.setAttribute ("class", "entryGroup");
+        element.setAttribute ("class", "formGroup");
 
-        for (Entry entry : entries)
-            element.appendChild (entry.toElement (doc));
+        element.appendChild (doc.createTextNode ("("));
+
+        int i = 0;
+        for (Form form : forms) {
+            element.appendChild (form.toElement (doc));
+
+            if (i < forms.size () - 1)
+                element.appendChild (doc.createTextNode (","));
+
+            i++;
+        }
+
+        element.appendChild (doc.createTextNode (")"));
 
         return element;
     }
 
     public String toString () {
-        return "Entry Group";
+        return "Form Group";
     }
 }

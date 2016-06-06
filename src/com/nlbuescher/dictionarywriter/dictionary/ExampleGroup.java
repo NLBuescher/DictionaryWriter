@@ -1,4 +1,4 @@
-package dictionary;
+package com.nlbuescher.dictionarywriter.dictionary;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -9,7 +9,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.util.ArrayList;
 
 /**
- * Sub-Definition Group
+ * Example Group
  * Copyright (C) 2016  Nicola Buescher
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -25,27 +25,28 @@ import java.util.ArrayList;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class SubDefinitionGroup {
-    private ArrayList<SubDefinition> subDefinitions = new ArrayList<> ();
+public class ExampleGroup {
+    private ArrayList<Example> examples = new ArrayList<> ();
 
 
-    public ArrayList<SubDefinition> getSubDefinitions () {
-        return subDefinitions;
+    public ArrayList<Example> getExamples () {
+        return examples;
     }
 
 
-    public static SubDefinitionGroup fromElement (Element element) {
-        SubDefinitionGroup subDefinitionGroup = new SubDefinitionGroup ();
+    public static ExampleGroup fromElement (Element element) {
+        ExampleGroup exampleGroup = new ExampleGroup ();
 
         NodeList nodes = element.getChildNodes ();
         for (int i = 0; i < nodes.getLength (); i++) {
             Node node = nodes.item (i);
             if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subDefinition")) {
-                    subDefinitionGroup.subDefinitions.add (SubDefinition.fromElement (span));
+                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("example")) {
+                    exampleGroup.examples.add (Example.fromElement (span));
+
                 } else {
-                    System.err.println ("Failed to create 'Sub-Definition' from " + span + "! The span doesn't have the proper 'class' attribute. " + span.getAttribute ("class"));
+                    System.err.println ("Failed to create 'Example' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
             } else if (node.getNodeType () == Node.TEXT_NODE) {
             } else {
@@ -53,20 +54,20 @@ public class SubDefinitionGroup {
             }
         }
 
-        return subDefinitionGroup;
+        return exampleGroup;
     }
 
     public Element toElement (Document doc) throws ParserConfigurationException {
         Element element = doc.createElement ("span");
-        element.setAttribute ("class", "subDefinitionGroup");
+        element.setAttribute ("class", "exampleGroup");
 
-        for (SubDefinition subDefinition : subDefinitions)
-            element.appendChild (subDefinition.toElement (doc));
+        for (Example example : examples)
+            element.appendChild (example.toElement (doc));
 
         return element;
     }
 
     public String toString () {
-        return "Sub-Definition Group";
+        return "Example Group";
     }
 }

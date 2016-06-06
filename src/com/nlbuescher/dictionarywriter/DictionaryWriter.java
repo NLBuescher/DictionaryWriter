@@ -1,4 +1,4 @@
-package app;
+package com.nlbuescher.dictionarywriter;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -23,7 +23,7 @@ import javafx.stage.Stage;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class Main extends Application {
+public class DictionaryWriter extends Application {
 
     private static Stage stage;
 
@@ -35,7 +35,7 @@ public class Main extends Application {
     public void start (Stage primaryStage) throws Exception {
         stage = primaryStage;
 
-        BorderPane root = FXMLLoader.load (Main.class.getResource ("main.fxml"));
+        BorderPane root = FXMLLoader.load (DictionaryWriter.class.getResource ("DictionaryWriter.fxml"));
 
         stage.setMinWidth (600);
         stage.setMinHeight (400);

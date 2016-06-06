@@ -1,10 +1,15 @@
-
+# Java build artifacts class files
 *.class
 
+# Intellij
 .idea
+*.iml
 
-DictionaryWriter.iml
+# other generated files
+out/
+release/
 
-out
+# OSX files
+.DS_Store
 
 ~preview.xhtml
