@@ -32,7 +32,7 @@
 </xsl:template>
 
 <xsl:template match="*[@d:pr='VA_IPA']">
-    <xsl:if test="$la_pronunciation = '1'">
+    <xsl:if test="$la_pronunciation = '0'">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()" />
         </xsl:copy>

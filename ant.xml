@@ -12,9 +12,9 @@
 
     <!-- clean -->
     <target name="clean">
-        <echo message="clean task ..."/>
         <mkdir dir="${release.dir}"/>
         <delete dir="${release.dir}/DictionaryWriter.app"/>
+        <delete file="${release.dir}/${projectname}_mac.zip"/>
     </target>
 
     <!-- create mac osx 'bundle' -->
@@ -42,6 +42,11 @@
         <copy file="webtransform.xsl" todir="${release.dir}/${bundlename}.app/Contents/Resources"/>
     </target>
 
+    <!-- create zip -->
+    <target name="zip">
+        <zip basedir="${release.dir}" excludes="${projectname}.jar" destfile="${release.dir}/${projectname}_mac.zip"/>
+    </target>
+
     <!-- default -->
-    <target name="default" depends="clean, create-bundle"/>
+    <target name="default" depends="clean, create-bundle, zip"/>
 </project>

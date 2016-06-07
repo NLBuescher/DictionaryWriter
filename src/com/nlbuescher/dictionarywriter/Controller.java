@@ -121,8 +121,8 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Definition) treeItem.getValue ()).setDefinitionLabel (definitionLabelTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
-
             });
             editorVBox.getChildren ().add (definitionLabelTextField);
 
@@ -135,6 +135,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Definition) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (specificationTextField);
@@ -148,6 +149,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Definition) treeItem.getValue ()).setDefinitionText (definitionTextTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (definitionTextTextField);
@@ -167,6 +169,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((DefinitionGroup) treeItem.getValue ()).setDefinitionGroupLabel (definitionGroupLabelTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (definitionGroupLabelTextField);
@@ -186,6 +189,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((DictEntry) treeItem.getValue ()).setId (entryIDTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (entryIDTextField);
@@ -199,6 +203,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((DictEntry) treeItem.getValue ()).setTitle (entryTitleTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (entryTitleTextField);
@@ -236,6 +241,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Example) treeItem.getValue ()).setExampleLabel (exampleLabelTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (exampleLabelTextField);
@@ -249,6 +255,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Example) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (specificationTextField);
@@ -262,6 +269,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Example) treeItem.getValue ()).setExampleText (exampleTextTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (exampleTextTextField);
@@ -270,11 +278,12 @@ public class Controller implements Initializable {
             exampleTranslationLabel.setPadding (new Insets (10, 0, 0, 0));
             editorVBox.getChildren ().add (exampleTranslationLabel);
 
-            TextField exampleTranslationTextField = new TextField (((Example) treeItem.getValue ()).getExampleTranslation ().replaceFirst ("\\s–\\s", ""));
+            TextField exampleTranslationTextField = new TextField (((Example) treeItem.getValue ()).getExampleTranslation ().replaceFirst ("\\s—\\s", ""));
             exampleTranslationTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
                 if (!newValue) {
-                    ((Example) treeItem.getValue ()).setExampleTranslation (" – " + exampleTranslationTextField.getText ());
+                    ((Example) treeItem.getValue ()).setExampleTranslation (" — " + exampleTranslationTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (exampleTranslationTextField);
@@ -295,11 +304,12 @@ public class Controller implements Initializable {
             formLabelLabel.setPadding (new Insets (10, 0, 0, 0));
             editorVBox.getChildren ().add (formLabelLabel);
 
-            TextField formLabelTextField = new TextField (((Form) treeItem.getValue ()).getFormLabel ());
+            TextField formLabelTextField = new TextField (((Form) treeItem.getValue ()).getFormLabel ().trim ());
             formLabelTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
                 if (!newValue) {
-                    ((Form) treeItem.getValue ()).setFormLabel (formLabelTextField.getText ());
+                    ((Form) treeItem.getValue ()).setFormLabel (formLabelTextField.getText () + " ");
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (formLabelTextField);
@@ -308,11 +318,12 @@ public class Controller implements Initializable {
             formTextLabel.setPadding (new Insets (10, 0, 0, 0));
             editorVBox.getChildren ().add (formTextLabel);
 
-            TextField formTextTextField = new TextField (((Form) treeItem.getValue ()).getFormText ());
+            TextField formTextTextField = new TextField (((Form) treeItem.getValue ()).getFormText ().trim ());
             formTextTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
                 if (!newValue) {
-                    ((Form) treeItem.getValue ()).setFormText (formTextTextField.getText ());
+                    ((Form) treeItem.getValue ()).setFormText (formTextTextField.getText () + " ");
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (formTextTextField);
@@ -338,6 +349,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((GrammarGroup) treeItem.getValue ()).setGrammar (grammarTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (grammarTextField);
@@ -351,6 +363,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((GrammarGroup) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (specificationTextField);
@@ -365,11 +378,12 @@ public class Controller implements Initializable {
             headWordLabel.setPadding (new Insets (10, 0, 0, 0));
             editorVBox.getChildren ().add (headWordLabel);
 
-            TextField headWordTextField = new TextField (((HeadGroup) treeItem.getValue ()).getHeadWord ());
+            TextField headWordTextField = new TextField (((HeadGroup) treeItem.getValue ()).getHeadWord ().trim ());
             headWordTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
                 if (!newValue) {
-                    ((HeadGroup) treeItem.getValue ()).setHeadWord (headWordTextField.getText ());
+                    ((HeadGroup) treeItem.getValue ()).setHeadWord (headWordTextField.getText () + " ");
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (headWordTextField);
@@ -389,6 +403,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Index) treeItem.getValue ()).setTitle (indexTitleTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (indexTitleTextField);
@@ -402,6 +417,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Index) treeItem.getValue ()).setValue (indexValueTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (indexValueTextField);
@@ -421,6 +437,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Note) treeItem.getValue ()).setNoteText (noteTextTextArea.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (noteTextTextArea);
@@ -446,6 +463,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Pronunciation) treeItem.getValue ()).setCL_IPA (clTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (clTextField);
@@ -459,6 +477,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((Pronunciation) treeItem.getValue ()).setVA_IPA (vaTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (vaTextField);
@@ -478,6 +497,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubDefinition) treeItem.getValue ()).setSubDefinitionLabel (subDefinitionLabelTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (subDefinitionLabelTextField);
@@ -491,6 +511,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubDefinition) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (specificationTextField);
@@ -504,6 +525,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubDefinition) treeItem.getValue ()).setSubDefinitionText (subDefinitionTextTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (subDefinitionTextTextField);
@@ -529,6 +551,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubEntry) treeItem.getValue ()).setSubEntryLabel (subEntryLabelTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (subEntryLabelTextField);
@@ -542,6 +565,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubEntry) treeItem.getValue ()).setSubEntryText (subEntryTextTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (subEntryTextTextField);
@@ -573,6 +597,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubEntryListItem) treeItem.getValue ()).setSubEntryListItemLabel (subEntryListItemLabelTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (subEntryListItemLabelTextField);
@@ -586,6 +611,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubEntryListItem) treeItem.getValue ()).setSpecification (specificationTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (specificationTextField);
@@ -599,6 +625,7 @@ public class Controller implements Initializable {
                 if (!newValue) {
                     ((SubEntryListItem) treeItem.getValue ()).setSubEntryListItemText (subEntryListItemTextTextField.getText ());
                     treeItem.getParent ().getChildren ().set (treeItem.getParent ().getChildren ().indexOf (treeItem), treeItem);
+                    updatePreview (treeItem);
                 }
             });
             editorVBox.getChildren ().add (subEntryListItemTextTextField);
@@ -1043,7 +1070,7 @@ public class Controller implements Initializable {
             }
             treeItem.getParent ().getChildren ().remove (treeItem);
         }
-    }
+    } 
 
     public void addNewItem () {
 

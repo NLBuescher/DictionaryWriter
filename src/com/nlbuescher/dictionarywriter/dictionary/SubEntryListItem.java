@@ -107,7 +107,7 @@ public class SubEntryListItem {
         if (!specification.equals ("")) {
             Element spec = doc.createElement ("span");
             spec.setAttribute ("class", "specification");
-            spec.appendChild (doc.createTextNode ("[" + specification + "]"));
+            spec.appendChild (doc.createTextNode (specification));
             element.appendChild (spec);
         }
 

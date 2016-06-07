@@ -97,7 +97,7 @@ public class SubEntry {
                         System.err.println ("Found additional 'Note Group'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Sub-Entry Label', 'Sub-Entry Text', 'Sub-Entry List', or 'Note Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println ("Failed to create either 'Sub-Entry Label', 'Sub-Entry Text', 'Sub-Entry List', or 'Note Group' from " + span + "! The span doesn't have a proper 'class' attribute. [" + span.getAttribute ("class") + "]");
                 }
             } else if (node.getNodeType () == Node.TEXT_NODE) {
             } else {
@@ -116,12 +116,14 @@ public class SubEntry {
             Element label = doc.createElement ("span");
             label.setAttribute ("class", "subEntryLabel");
             label.appendChild (doc.createTextNode (subEntryLabel));
+            element.appendChild (label);
         }
 
         if (!subEntryText.equals ("")) {
             Element text = doc.createElement ("span");
-            text.setAttribute ("class", "subEntryLabel");
+            text.setAttribute ("class", "subEntryText");
             text.appendChild (doc.createTextNode (subEntryText));
+            element.appendChild (text);
         }
 
         if (subEntryList != null)

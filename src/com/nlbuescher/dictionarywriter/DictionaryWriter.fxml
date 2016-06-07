@@ -9,8 +9,6 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.SeparatorMenuItem?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.control.TreeView?>
 <?import javafx.scene.input.KeyCodeCombination?>
@@ -37,7 +35,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<BorderPane fx:id="root" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nlbuescher.dictionarywriter.Controller">
+<BorderPane fx:id="root" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.nlbuescher.dictionarywriter.Controller">
   <top>
       <MenuBar fx:id="menuBar" BorderPane.alignment="CENTER">
           <Menu mnemonicParsing="false" text="File">
@@ -65,22 +63,6 @@
           </Menu>
       </MenuBar>
   </top>
-  <center>
-      <TabPane tabClosingPolicy="UNAVAILABLE" tabMinWidth="64.0" BorderPane.alignment="CENTER">
-          <Tab closable="false" text="Editor">
-              <ScrollPane fx:id="editorScrollPane" prefHeight="200.0" prefWidth="200.0">
-                  <VBox fx:id="editorVBox" spacing="4.0">
-                      <padding>
-                          <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-                      </padding>
-                  </VBox>
-              </ScrollPane>
-          </Tab>
-          <Tab closable="false" text="Preview">
-              <WebView fx:id="previewWebView" prefHeight="200.0" prefWidth="200.0" />
-          </Tab>
-      </TabPane>
-  </center>
   <bottom>
       <HBox BorderPane.alignment="CENTER">
           <padding>
@@ -90,7 +72,7 @@
       </HBox>
   </bottom>
    <left>
-       <VBox>
+       <VBox maxHeight="1.7976931348623157E308" maxWidth="200.0" minHeight="200.0" minWidth="200.0">
            <ButtonBar buttonMinWidth="20.0" VBox.vgrow="NEVER">
                <buttons>
                    <Button fx:id="addItemButton" mnemonicParsing="false" onAction="#addNewItem" text="+">
@@ -106,4 +88,16 @@
            <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
        </VBox>
    </left>
+   <right>
+        <ScrollPane fx:id="editorScrollPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="200.0" minWidth="200.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="editorVBox" spacing="4.0">
+                <padding>
+                    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                </padding>
+            </VBox>
+        </ScrollPane>
+   </right>
+   <center>
+        <WebView fx:id="previewWebView" minHeight="200.0" minWidth="300.0" prefHeight="-1.0" prefWidth="-1.0" BorderPane.alignment="CENTER" />
+   </center>
 </BorderPane>
