@@ -440,6 +440,8 @@ public class Controller implements Initializable {
                     updatePreview (treeItem);
                 }
             });
+            noteTextTextArea.setWrapText (true);
+            noteTextTextArea.setMaxWidth (180);
             editorVBox.getChildren ().add (noteTextTextArea);
 
         } else if (treeItem.getValue () instanceof NoteGroup) {
