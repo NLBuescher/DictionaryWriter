@@ -1384,7 +1384,7 @@ public class Controller implements Initializable {
             });
             subEntryGroupRow.getChildren ().add (subEntryGroupButton);
 
-            Label subEntryGroupLabel = new Label ("Entry Group");
+            Label subEntryGroupLabel = new Label ("Sub-Entry Group");
             subEntryGroupRow.getChildren ().add (subEntryGroupLabel);
 
             column.getChildren ().add (subEntryGroupRow);

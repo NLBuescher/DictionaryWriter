@@ -9,7 +9,7 @@ a {
 	color: #2971A7;
 	font-size: 110%;
 	font-variant: small-caps;
-	font-weight: 500;
+	font-weight: bold;
 	text-decoration: none;
 }
 
@@ -91,7 +91,7 @@ span.definition {
 span.definitionGroup {}
 span.definitionGroupLabel {
 	display: block;
-	font-weight: 600;
+	font-weight: bold;
 	margin-bottom: -1.2em;
 	margin-top: 1.7em;
 }
@@ -104,11 +104,12 @@ span.definitionText {}
 
 span.entryGroup {
 	display: block;
-	margin-bottom: 2.2em;
 	margin-top: 0.4em;
 }
-
-span.entry {}
+span.entry {
+	display: block;
+	margin-bottom: 2.4em;
+}
 
 span.example {}
 span.exampleGroup {
@@ -117,7 +118,7 @@ span.exampleGroup {
 	margin-top: 0em;
 }
 span.exampleLabel {
-	font-weight: 600;
+	font-weight: bold;
 	margin-left: -0.9em;
 	margin-right: 0.3em;
 }
@@ -130,7 +131,7 @@ span.exampleTranslation {
 
 span.form {}
 span.formText{
-	font-weight: 600;
+	font-weight: bold;
 }
 span.formGroup {
 	vertical-align: 5%;
@@ -206,7 +207,7 @@ span.subEntryLabel {
 	border-bottom: solid thin #dddddd;
 	display: block;
 	font-size: 85%;
-	font-weight: 600;
+	font-weight: bold;
 	margin-bottom: 1.6em;
 	margin-left: -1em;
 	padding-bottom: 0.3em;
@@ -214,7 +215,7 @@ span.subEntryLabel {
 span.subEntryText {}
 span.subEntryTextHead {
 	display: block;
-	font-weight: 600;
+	font-weight: bold;
 }
 
 span.subEntryList {}
