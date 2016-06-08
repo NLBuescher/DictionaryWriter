@@ -11,19 +11,19 @@
 
 ## Release v1.1.1
 
-Bug Fixes:
+### Bug Fixes:
 - fixed a bug where the TextArea in the Note element editor was too big for the editor and would scroll text instead of wrap it
 - fixed a bug where the WebView wouldn't render the `font-weight: 600;` attribute for spans. i changed it to `font-weight: bold;` and it works fine now
 
-Changed:
+### Changed:
 - changed the double at `@@?` modifier to a single crunch `#` (the @ took up too much space in the text fields)
 
 ## Release v1.1.0
 
-Bug Fixes:
+### Bug Fixes:
 - fixed a bug where the sub-entry labels and sub-entry texts weren't being written to file
 
-Changed:
+### Changed:
 - the preview and editor tabs now share the canvas, because switching between them was unnecessary and annoying
 - the preview now updates with the updating of any text field in addition to updating with the selection of a different tree item
 - the preview has been moved to the center, providing a sort of WYSIWYG experience.
@@ -31,7 +31,7 @@ Changed:
 
 ## Release v1.0.0
 
-What it can do so far:
+### What it can do so far:
 - load a dictionary from an xhtml or xml file
 - create a new dictionary and save it to xhtml or xml
 - save a loaded dictionary to xhtml or xml
