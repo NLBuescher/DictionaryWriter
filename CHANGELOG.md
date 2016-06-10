@@ -4,7 +4,6 @@
 - moving tree items up or down
 - figuring out what to use the status bar for
 - adding tutorial-like help stuff
-- consolidating the indices into the editor for the Dictionary Entry tree item because as they are they hog too much space
 - giving the user copypasta powers for tree items (especially indices)
 - maybe add the ability for the program to auto-generate indices based on the grammar info (because manually filling them in is a pain)
 - maybe adding add buttons to the editor pane
@@ -16,6 +15,7 @@ Bug Fixes:
 - fixed a bug where the WebView wouldn't render the `font-weight: 600;` attribute for spans. i changed it to `font-weight: bold;` and it works fine now
 
 Changed:
+- moved indices to the DictEntry editor view to save space in the main treeview.
 - changed the double at `@@?` modifier to a single crunch `#` (the @ took up too much space in the text fields)
 
 ## Release v1.1.0
