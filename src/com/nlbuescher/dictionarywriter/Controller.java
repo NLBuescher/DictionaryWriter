@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
@@ -207,6 +208,63 @@ public class Controller implements Initializable {
                 }
             });
             editorVBox.getChildren ().add (entryTitleTextField);
+
+
+            Label indicesLabel = new Label ("Indices");
+            indicesLabel.setPadding (new Insets (10, 0, 0, 0));
+            editorVBox.getChildren ().add (indicesLabel);
+
+            TextField indexTitleTextField = new TextField ();
+            TextField indexValueTextField = new TextField ();
+
+            ListView<Index> indexListView = new ListView<> ();
+            indexListView.setPrefHeight (120);
+            for (Index index : ((DictEntry) treeItem.getValue ()).getIndices ())
+                indexListView.getItems ().add (index);
+            indexListView.getSelectionModel ().selectedItemProperty ().addListener ((observable, oldValue, newValue) -> {
+                indexTitleTextField.setText (newValue.getTitle ());
+                indexValueTextField.setText (newValue.getValue ());
+            });
+            editorVBox.getChildren ().add (indexListView);
+
+            HBox buttons = new HBox ();
+            buttons.setAlignment (Pos.CENTER_RIGHT);
+
+            Button addButton = new Button ("+");
+            addButton.setOnAction (actionEvent -> {
+                Index index = new Index ();
+                indexListView.getItems ().add (index);
+                indexListView.getSelectionModel ().select (index);
+            });
+            buttons.getChildren ().add (addButton);
+
+            Button removeButton = new Button ("-");
+            removeButton.setOnAction (actionEvent -> {
+                indexListView.getItems ().remove (indexListView.getSelectionModel ().getSelectedItem ());
+            });
+            buttons.getChildren ().add (removeButton);
+
+            editorVBox.getChildren ().add (buttons);
+
+            Label indexValueLabel = new Label ("Index Value");
+            indexValueLabel.setPadding (new Insets (10, 0, 0, 0));
+            editorVBox.getChildren ().add (indexValueLabel);
+
+            indexValueTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
+                if (!newValue)
+                    indexListView.getSelectionModel ().getSelectedItem ().setValue (indexValueTextField.getText ());
+            });
+            editorVBox.getChildren ().add (indexValueTextField);
+
+            Label indexTitleLabel = new Label ("Index Title");
+            indexTitleLabel.setPadding (new Insets (10, 0, 0, 0));
+            editorVBox.getChildren ().add (indexTitleLabel);
+
+            indexTitleTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
+                if (!newValue)
+                    indexListView.getSelectionModel ().getSelectedItem ().setTitle (indexTitleTextField.getText ());
+            });
+            editorVBox.getChildren ().add (indexTitleTextField);
 
         } else if (treeItem.getValue () instanceof Dictionary) {
 
@@ -753,8 +811,8 @@ public class Controller implements Initializable {
             TreeItem<Object> treeItem = new TreeItem<> (entry);
             root.getChildren ().add (treeItem);
 
-            for (Index index : entry.getIndices ())
-                addToTree (index, treeItem);
+//            for (Index index : entry.getIndices ())
+//                addToTree (index, treeItem);
 
             addToTree (entry.getHeadGroup (), treeItem);
 
@@ -1195,29 +1253,29 @@ public class Controller implements Initializable {
 
         } else if (treeItem.getValue () instanceof DictEntry) {
 
-            HBox indexRow = new HBox ();
-            indexRow.setAlignment (Pos.CENTER_LEFT);
-            indexRow.setSpacing (10);
-
-            Button indexButton = new Button ("+");
-            indexButton.setOnAction (actionEvent -> {
-                Index index = new Index ();
-                ((DictEntry) treeItem.getValue ()).getIndices ().add (index);
-
-                int i = findIndexFor (Index.class, treeItem.getChildren ());
-
-                TreeItem<Object> indexTreeItem = new TreeItem<> (index);
-                treeItem.getChildren ().add (i, indexTreeItem);
-                treeView.getSelectionModel ().select (indexTreeItem);
-
-                popOver.hide ();
-            });
-            indexRow.getChildren ().add (indexButton);
-
-            Label indexLabel = new Label ("Index");
-            indexRow.getChildren ().add (indexLabel);
-
-            column.getChildren ().add (indexRow);
+//            HBox indexRow = new HBox ();
+//            indexRow.setAlignment (Pos.CENTER_LEFT);
+//            indexRow.setSpacing (10);
+//
+//            Button indexButton = new Button ("+");
+//            indexButton.setOnAction (actionEvent -> {
+//                Index index = new Index ();
+//                ((DictEntry) treeItem.getValue ()).getIndices ().add (index);
+//
+//                int i = findIndexFor (Index.class, treeItem.getChildren ());
+//
+//                TreeItem<Object> indexTreeItem = new TreeItem<> (index);
+//                treeItem.getChildren ().add (i, indexTreeItem);
+//                treeView.getSelectionModel ().select (indexTreeItem);
+//
+//                popOver.hide ();
+//            });
+//            indexRow.getChildren ().add (indexButton);
+//
+//            Label indexLabel = new Label ("Index");
+//            indexRow.getChildren ().add (indexLabel);
+//
+//            column.getChildren ().add (indexRow);
 
 
             HBox headGroupRow = new HBox ();

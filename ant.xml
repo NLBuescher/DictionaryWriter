@@ -33,7 +33,7 @@
             <runtime dir="${env.JAVA_HOME}"/>
             <classpath file="${release.dir}/${projectname}.jar"/>
 
-            <option value="-Xdock:icon=Contents/Resources/WikiReader.icns"/>
+            <option value="-Xdock:icon=Contents/Resources/DictionaryWriter.icns"/>
             <option value="-Dapple.awt.application.name=WikiReader"/>
             <option value="-Dcom.apple.smallTabs=true"/>
             <option value="-Duser.dir=$APP_ROOT/Contents/Resources"/>

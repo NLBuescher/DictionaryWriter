@@ -38,9 +38,9 @@ public class DictionaryWriter extends Application {
         BorderPane root = FXMLLoader.load (DictionaryWriter.class.getResource ("DictionaryWriter.fxml"));
 
         stage.setMinWidth (900);
-        stage.setMinHeight (400);
+        stage.setMinHeight (500);
         stage.setTitle ("Dictionary Writer");
-        stage.setScene (new Scene (root, 900, 400));
+        stage.setScene (new Scene (root, 900, 500));
         stage.show();
     }
 
