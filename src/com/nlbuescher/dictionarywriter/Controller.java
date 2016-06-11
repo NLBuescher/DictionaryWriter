@@ -735,7 +735,7 @@ public class Controller implements Initializable {
                     .replaceAll (">\\(<", ">\n\t\t\t\t\t\t(\n\t\t\t\t\t\t<")
                     .replaceAll (">,<", ">\n\t\t\t\t\t\t,\t\t\t\t\t\t\n<")
                     .replaceAll (">\\)<", ">\n\t\t\t\t\t\t)\n\t\t\t\t\t<")
-                    .replaceAll ("@@(.)", "<span id=\"$1\"/>")
+                    .replaceAll ("#(.)", "<span id=\"$1\"/>")
                     .replaceAll ("\\*\\*\\*(.*?)\\*\\*\\*", "<b><i>$1</i></b>")
                     .replaceAll ("\\*\\*(.*?)\\*\\*", "<b>$1</b>")
                     .replaceAll ("\\*(.*?)\\*", "<i>$1</i>")
