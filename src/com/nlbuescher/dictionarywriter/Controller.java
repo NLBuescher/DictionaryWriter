@@ -251,8 +251,11 @@ public class Controller implements Initializable {
             editorVBox.getChildren ().add (indexValueLabel);
 
             indexValueTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
-                    indexListView.getSelectionModel ().getSelectedItem ().setValue (indexValueTextField.getText ());
+                if (!newValue) {
+                    Index index = indexListView.getSelectionModel ().getSelectedItem ();
+                    index.setValue (indexValueTextField.getText ());
+                    indexListView.getItems ().set (indexListView.getItems ().indexOf (index), index);
+                }
             });
             editorVBox.getChildren ().add (indexValueTextField);
 
@@ -261,8 +264,11 @@ public class Controller implements Initializable {
             editorVBox.getChildren ().add (indexTitleLabel);
 
             indexTitleTextField.focusedProperty ().addListener ((observable, oldValue, newValue) -> {
-                if (!newValue)
-                    indexListView.getSelectionModel ().getSelectedItem ().setTitle (indexTitleTextField.getText ());
+                if (!newValue) {
+                    Index index = indexListView.getSelectionModel ().getSelectedItem ();
+                    index.setTitle (indexTitleTextField.getText ());
+                    indexListView.getItems ().set (indexListView.getItems ().indexOf (index), index);
+                }
             });
             editorVBox.getChildren ().add (indexTitleTextField);
 
