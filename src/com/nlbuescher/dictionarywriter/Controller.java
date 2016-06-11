@@ -13,7 +13,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.web.WebEngine;
@@ -760,7 +759,7 @@ public class Controller implements Initializable {
 
         try {
             String inputString = new Scanner (currentFile).useDelimiter ("\\Z").next ()
-                    .replaceAll ("<span id=\"(.)\"/>", "@@$1")
+                    .replaceAll ("<span id=\"(.)\"/>", "#$1")
                     .replaceAll ("<b>(.*?)</b>", "**$1**")
                     .replaceAll ("<i>(.*?)</i>", "*$1*")
                     .replaceAll ("<sup>(.*?)</sup>", "^($1)");
@@ -1026,7 +1025,7 @@ public class Controller implements Initializable {
                             .replaceAll (">\\(<", ">\n\t\t\t\t\t\t(\n\t\t\t\t\t\t<")
                             .replaceAll (">,<", ">\n\t\t\t\t\t\t,\t\t\t\t\t\t\n<")
                             .replaceAll (">\\)<", ">\n\t\t\t\t\t\t)\n\t\t\t\t\t<")
-                            .replaceAll ("@@(.)", "<span id=\"$1\"/>")
+                            .replaceAll ("#(.)", "<span id=\"$1\"/>")
                             .replaceAll ("\\*\\*\\*(.*?)\\*\\*\\*", "<b><i>$1</i></b>")
                             .replaceAll ("\\*\\*(.*?)\\*\\*", "<b>$1</b>")
                             .replaceAll ("\\*(.*?)\\*", "<i>$1</i>")
