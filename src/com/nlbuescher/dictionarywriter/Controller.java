@@ -233,13 +233,16 @@ public class Controller implements Initializable {
             addButton.setOnAction (actionEvent -> {
                 Index index = new Index ();
                 indexListView.getItems ().add (index);
+                ((DictEntry) treeItem.getValue ()).getIndices ().add (index);
                 indexListView.getSelectionModel ().select (index);
             });
             buttons.getChildren ().add (addButton);
 
             Button removeButton = new Button ("-");
             removeButton.setOnAction (actionEvent -> {
-                indexListView.getItems ().remove (indexListView.getSelectionModel ().getSelectedItem ());
+                Index index = indexListView.getSelectionModel ().getSelectedItem ();
+                indexListView.getItems ().remove (index);
+                ((DictEntry) treeItem.getValue ()).getIndices ().remove (index);
             });
             buttons.getChildren ().add (removeButton);
 
