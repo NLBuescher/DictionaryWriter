@@ -35,6 +35,8 @@ import java.io.FileOutputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -1896,5 +1898,383 @@ public class Controller implements Initializable {
         documentLoaded = true;
 
         newFile = true;
+    }
+
+    public void moveItemDown () {
+        TreeItem<Object> treeItem = treeView.getSelectionModel ().getSelectedItem ();
+
+        if (treeItem == null) { // null check to avoid null pointer exception
+        } else if (treeItem.getValue () instanceof Definition) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof Definition) {
+                    ArrayList model = ((DefinitionGroup) treeItem.getParent ().getValue ()).getDefinitions ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof DefinitionGroup) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof DefinitionGroup) {
+                    ArrayList model = ((Entry) treeItem.getParent ().getValue ()).getDefinitionGroups ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof DictEntry) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof DictEntry) {
+                    ArrayList model = ((Dictionary) treeItem.getParent ().getValue ()).getEntries ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Entry) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof Entry) {
+                    ArrayList model = ((EntryGroup) treeItem.getParent ().getValue ()).getEntries ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Example) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof Example) {
+                    ArrayList model = ((ExampleGroup) treeItem.getParent ().getValue ()).getExamples ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Form) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof Form) {
+                    ArrayList model = ((FormGroup) treeItem.getParent ().getValue ()).getForms ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Note) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof Note) {
+                    ArrayList model = ((NoteGroup) treeItem.getParent ().getValue ()).getNotes ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof SubDefinition) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof SubDefinition) {
+                    ArrayList model = ((SubDefinitionGroup) treeItem.getParent ().getValue ()).getSubDefinitions ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof SubEntry) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof SubEntry) {
+                    ArrayList model = ((SubEntryGroup) treeItem.getParent ().getValue ()).getSubEntries ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof SubEntryListItem) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i < list.size ()) {
+                int j = i + 1;
+
+                if (list.get (j).getValue () instanceof SubEntryListItem) {
+                    ArrayList model = ((SubEntryList) treeItem.getParent ().getValue ()).getSubEntryListItems ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k + 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        }
+        treeView.requestFocus ();
+        treeView.getSelectionModel ().select (treeItem);
+    }
+
+    public void moveItemUp () {
+        TreeItem<Object> treeItem = treeView.getSelectionModel ().getSelectedItem ();
+
+        if (treeItem == null) { // null check to avoid null pointer exception
+        } else if (treeItem.getValue () instanceof Definition) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof Definition) {
+                    ArrayList model = ((DefinitionGroup) treeItem.getParent ().getValue ()).getDefinitions ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof DefinitionGroup) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof DefinitionGroup) {
+                    ArrayList model = ((Entry) treeItem.getParent ().getValue ()).getDefinitionGroups ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof DictEntry) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof DictEntry) {
+                    ArrayList model = ((Dictionary) treeItem.getParent ().getValue ()).getEntries ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Entry) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof Entry) {
+                    ArrayList model = ((EntryGroup) treeItem.getParent ().getValue ()).getEntries ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Example) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof Example) {
+                    ArrayList model = ((ExampleGroup) treeItem.getParent ().getValue ()).getExamples ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Form) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof Form) {
+                    ArrayList model = ((FormGroup) treeItem.getParent ().getValue ()).getForms ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof Note) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof Note) {
+                    ArrayList model = ((NoteGroup) treeItem.getParent ().getValue ()).getNotes ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof SubDefinition) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof SubDefinition) {
+                    ArrayList model = ((SubDefinitionGroup) treeItem.getParent ().getValue ()).getSubDefinitions ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof SubEntry) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof SubEntry) {
+                    ArrayList model = ((SubEntryGroup) treeItem.getParent ().getValue ()).getSubEntries ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        } else if (treeItem.getValue () instanceof SubEntryListItem) {
+            ObservableList<TreeItem<Object>> list = treeItem.getParent ().getChildren ();
+
+            int i = list.indexOf (treeItem);
+
+            if (i > 0) {
+                int j = i - 1;
+
+                if (list.get (j).getValue () instanceof SubEntryListItem) {
+                    ArrayList model = ((SubEntryList) treeItem.getParent ().getValue ()).getSubEntryListItems ();
+
+                    int k = model.indexOf (treeItem.getValue ());
+                    int l = k - 1;
+
+                    Collections.swap (list, i, j);
+                    Collections.swap (model, k, l);
+                }
+            }
+        }
+        treeView.requestFocus ();
+        treeView.getSelectionModel ().select (treeItem);
     }
 }
