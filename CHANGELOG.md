@@ -7,6 +7,7 @@
 - giving the user copypasta powers for tree items (especially indices)
 - maybe add the ability for the program to auto-generate indices based on the grammar info (because manually filling them in is a pain)
 - maybe adding add buttons to the editor pane
+- have buttons start as disabled by default and have them enable themselves based on whether they have a function in the current context
 
 ## Release v1.1.1
 
@@ -17,6 +18,9 @@ Bug Fixes:
 Changed:
 - moved indices to the DictEntry editor view to save space in the main treeview.
 - changed the double at `@@?` modifier to a single crunch `#` (the @ took up too much space in the text fields)
+
+Code changes:
+- organized the methods in the Controller class, first by `public` vs. `private`, and then alphabetically
 
 ## Release v1.1.0
 
