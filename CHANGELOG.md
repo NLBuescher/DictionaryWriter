@@ -1,15 +1,19 @@
 # Changelog
 
 ## Planned Features
-- moving tree items up or down
 - figuring out what to use the status bar for
 - adding tutorial-like help stuff
 - giving the user copypasta powers for tree items (especially indices)
 - maybe add the ability for the program to auto-generate indices based on the grammar info (because manually filling them in is a pain)
 - maybe adding add buttons to the editor pane
-- have buttons start as disabled by default and have them enable themselves based on whether they have a function in the current context
+- have buttons start as `disabled` by default and have them enable themselves based on whether they have a function in the current context
+- add customizable variants to the Pronunciation class so this program can be used for any dictionary in any language
+- enable the user to edit indices in-place
 
-## Release v1.1.1
+## Release v1.2.0
+
+Added:
+- rearrangeable items in the treeview can now be moved up and down
 
 Bug Fixes:
 - fixed a bug where the TextArea in the Note element editor was too big for the editor and would scroll text instead of wrap it
@@ -17,10 +21,10 @@ Bug Fixes:
 
 Changed:
 - moved indices to the DictEntry editor view to save space in the main treeview.
-- changed the double at `@@?` modifier to a single crunch `#` (the @ took up too much space in the text fields)
+- changed the double at `@@?` modifier to a single crunch `#?` (the @ took up too much space in the text fields)
 
-Code changes:
-- organized the methods in the Controller class, first by `public` vs. `private`, and then alphabetically
+API changes:
+- organized the methods in the Controller class, first by `public` vs. `private`, then alphabetically
 
 ## Release v1.1.0
 

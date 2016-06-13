@@ -59,6 +59,11 @@ import java.util.Scanner;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Controller implements Initializable {
+    private boolean documentLoaded = false;
+    private boolean newFile        = false;
+    private File       currentFile;
+    private Dictionary dictionary;
+
 
     public BorderPane root;
 
@@ -72,16 +77,10 @@ public class Controller implements Initializable {
 
     public TreeView<Object> treeView;
 
-    public ScrollPane editorScrollPane;
-    public VBox       editorVBox;
     public WebView    previewWebView;
+    public VBox       editorVBox;
 
     public Label statusBarLabel;
-
-    private boolean documentLoaded = false;
-    private boolean newFile        = false;
-    private File       currentFile;
-    private Dictionary dictionary;
 
 
     @Override
