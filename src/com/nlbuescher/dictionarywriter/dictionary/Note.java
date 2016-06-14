@@ -26,32 +26,32 @@ public class Note {
     private String noteText = "";
 
 
-    public String getNoteText () {
+    public String getNoteText() {
         return noteText;
     }
 
-    public void setNoteText (String noteText) {
+    public void setNoteText(String noteText) {
         this.noteText = noteText;
     }
 
 
-    public static Note fromElement (Element element) {
-        Note note = new Note ();
+    public static Note fromElement(Element element) {
+        Note note = new Note();
 
-        note.noteText = element.getTextContent ();
+        note.noteText = element.getTextContent();
 
         return note;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "note");
-        element.appendChild (doc.createTextNode (noteText));
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "note");
+        element.appendChild(doc.createTextNode(noteText));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Note";
     }
 }

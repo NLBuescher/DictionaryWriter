@@ -26,116 +26,116 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class SubEntry {
     private String subEntryLabel = "";
-    private String subEntryText  = "";
+    private String subEntryText = "";
     private SubEntryList subEntryList;
-    private NoteGroup    noteGroup;
+    private NoteGroup noteGroup;
 
 
-    public String getSubEntryLabel () {
+    public String getSubEntryLabel() {
         return subEntryLabel;
     }
 
-    public String getSubEntryText () {
+    public String getSubEntryText() {
         return subEntryText;
     }
 
-    public SubEntryList getSubEntryList () {
+    public SubEntryList getSubEntryList() {
         return subEntryList;
     }
 
-    public NoteGroup getNoteGroup () {
+    public NoteGroup getNoteGroup() {
         return noteGroup;
     }
 
-    public void setSubEntryLabel (String subEntryLabel) {
+    public void setSubEntryLabel(String subEntryLabel) {
         this.subEntryLabel = subEntryLabel;
     }
 
-    public void setSubEntryText (String subEntryText) {
+    public void setSubEntryText(String subEntryText) {
         this.subEntryText = subEntryText;
     }
 
-    public void setSubEntryList (SubEntryList subEntryList) {
+    public void setSubEntryList(SubEntryList subEntryList) {
         this.subEntryList = subEntryList;
     }
 
-    public void setNoteGroup (NoteGroup noteGroup) {
+    public void setNoteGroup(NoteGroup noteGroup) {
         this.noteGroup = noteGroup;
     }
 
 
-    public static SubEntry fromElement (Element element) {
-        SubEntry subEntry = new SubEntry ();
+    public static SubEntry fromElement(Element element) {
+        SubEntry subEntry = new SubEntry();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryLabel")) {
-                    if (subEntry.subEntryLabel.equals ("")) {
-                        subEntry.subEntryLabel = span.getTextContent ();
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryLabel")) {
+                    if (subEntry.subEntryLabel.equals("")) {
+                        subEntry.subEntryLabel = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Sub-Entry Label'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Entry Label'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryText")) {
-                    if (subEntry.subEntryText.equals ("")) {
-                        subEntry.subEntryText = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryText")) {
+                    if (subEntry.subEntryText.equals("")) {
+                        subEntry.subEntryText = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Sub-Entry Text'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Entry Text'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryList")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryList")) {
                     if (subEntry.subEntryList == null) {
-                        subEntry.subEntryList = SubEntryList.fromElement (span);
+                        subEntry.subEntryList = SubEntryList.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Sub-Entry List'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Entry List'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("noteGroup")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("noteGroup")) {
                     if (subEntry.noteGroup == null) {
-                        subEntry.noteGroup = NoteGroup.fromElement (span);
+                        subEntry.noteGroup = NoteGroup.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Note Group'! Keeping first input.");
+                        System.err.println("Found additional 'Note Group'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Sub-Entry Label', 'Sub-Entry Text', 'Sub-Entry List', or 'Note Group' from " + span + "! The span doesn't have a proper 'class' attribute. [" + span.getAttribute ("class") + "]");
+                    System.err.println("Failed to create either 'Sub-Entry Label', 'Sub-Entry Text', 'Sub-Entry List', or 'Note Group' from " + span + "! The span doesn't have a proper 'class' attribute. [" + span.getAttribute("class") + "]");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return subEntry;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "subEntry");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "subEntry");
 
-        if (!subEntryLabel.equals ("")) {
-            Element label = doc.createElement ("span");
-            label.setAttribute ("class", "subEntryLabel");
-            label.appendChild (doc.createTextNode (subEntryLabel));
-            element.appendChild (label);
+        if (!subEntryLabel.equals("")) {
+            Element label = doc.createElement("span");
+            label.setAttribute("class", "subEntryLabel");
+            label.appendChild(doc.createTextNode(subEntryLabel));
+            element.appendChild(label);
         }
 
-        if (!subEntryText.equals ("")) {
-            Element text = doc.createElement ("span");
-            text.setAttribute ("class", "subEntryText");
-            text.appendChild (doc.createTextNode (subEntryText));
-            element.appendChild (text);
+        if (!subEntryText.equals("")) {
+            Element text = doc.createElement("span");
+            text.setAttribute("class", "subEntryText");
+            text.appendChild(doc.createTextNode(subEntryText));
+            element.appendChild(text);
         }
 
         if (subEntryList != null)
-            element.appendChild (subEntryList.toElement (doc));
+            element.appendChild(subEntryList.toElement(doc));
 
         if (noteGroup != null)
-            element.appendChild (noteGroup.toElement (doc));
+            element.appendChild(noteGroup.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Sub-Entry";
     }
 }

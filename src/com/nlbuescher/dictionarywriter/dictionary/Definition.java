@@ -26,139 +26,139 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class Definition {
     private String definitionLabel = "";
-    private String specification   = "";
-    private String definitionText  = "";
-    private ExampleGroup       exampleGroup;
+    private String specification = "";
+    private String definitionText = "";
+    private ExampleGroup exampleGroup;
     private SubDefinitionGroup subDefinitionGroup;
 
 
-    public String getDefinitionLabel () {
+    public String getDefinitionLabel() {
         return definitionLabel;
     }
 
-    public String getSpecification () {
+    public String getSpecification() {
         return specification;
     }
 
-    public String getDefinitionText () {
+    public String getDefinitionText() {
         return definitionText;
     }
 
-    public ExampleGroup getExampleGroup () {
+    public ExampleGroup getExampleGroup() {
         return exampleGroup;
     }
 
-    public SubDefinitionGroup getSubDefinitionGroup () {
+    public SubDefinitionGroup getSubDefinitionGroup() {
         return subDefinitionGroup;
     }
 
-    public void setDefinitionLabel (String definitionLabel) {
+    public void setDefinitionLabel(String definitionLabel) {
         this.definitionLabel = definitionLabel;
     }
 
-    public void setSpecification (String specification) {
+    public void setSpecification(String specification) {
         this.specification = specification;
     }
 
-    public void setDefinitionText (String definitionText) {
+    public void setDefinitionText(String definitionText) {
         this.definitionText = definitionText;
     }
 
-    public void setExampleGroup (ExampleGroup exampleGroup) {
+    public void setExampleGroup(ExampleGroup exampleGroup) {
         this.exampleGroup = exampleGroup;
     }
 
-    public void setSubDefinitionGroup (SubDefinitionGroup subDefinitionGroup) {
+    public void setSubDefinitionGroup(SubDefinitionGroup subDefinitionGroup) {
         this.subDefinitionGroup = subDefinitionGroup;
     }
 
 
-    public static Definition fromElement (Element element) {
-        Definition definition = new Definition ();
+    public static Definition fromElement(Element element) {
+        Definition definition = new Definition();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("definitionLabel")) {
-                    if (definition.definitionLabel.equals ("")) {
-                        definition.definitionLabel = span.getTextContent ();
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("definitionLabel")) {
+                    if (definition.definitionLabel.equals("")) {
+                        definition.definitionLabel = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Definition Label'! Keeping first input.");
+                        System.err.println("Found additional 'Definition Label'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("specification")) {
-                    if (definition.specification.equals ("")) {
-                        definition.specification = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("specification")) {
+                    if (definition.specification.equals("")) {
+                        definition.specification = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Specification'! Keeping first input.");
+                        System.err.println("Found additional 'Specification'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("definitionText")) {
-                    if (definition.definitionText.equals ("")) {
-                        definition.definitionText = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("definitionText")) {
+                    if (definition.definitionText.equals("")) {
+                        definition.definitionText = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Definition Text'! Keeping first input.");
+                        System.err.println("Found additional 'Definition Text'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("exampleGroup")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("exampleGroup")) {
                     if (definition.exampleGroup == null) {
-                        definition.exampleGroup = ExampleGroup.fromElement (span);
+                        definition.exampleGroup = ExampleGroup.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Example Group'! Keeping first input.");
+                        System.err.println("Found additional 'Example Group'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subDefinitionGroup")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("subDefinitionGroup")) {
                     if (definition.subDefinitionGroup == null) {
-                        definition.subDefinitionGroup = SubDefinitionGroup.fromElement (span);
+                        definition.subDefinitionGroup = SubDefinitionGroup.fromElement(span);
 
                     } else {
-                        System.err.println ("Found additional 'Sub-Definition Group'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Definition Group'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Definition Label', 'Specification', 'Definition Text', 'Example Group', or 'Sub-Definition Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println("Failed to create either 'Definition Label', 'Specification', 'Definition Text', 'Example Group', or 'Sub-Definition Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return definition;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "definition");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "definition");
 
-        if (!definitionLabel.equals ("")) {
-            Element label = doc.createElement ("span");
-            label.setAttribute ("class", "definitionLabel");
-            label.appendChild (doc.createTextNode (definitionLabel));
-            element.appendChild (label);
+        if (!definitionLabel.equals("")) {
+            Element label = doc.createElement("span");
+            label.setAttribute("class", "definitionLabel");
+            label.appendChild(doc.createTextNode(definitionLabel));
+            element.appendChild(label);
         }
 
-        if (!specification.equals ("")) {
-            Element spec = doc.createElement ("span");
-            spec.setAttribute ("class", "specification");
-            spec.appendChild (doc.createTextNode (specification));
-            element.appendChild (spec);
+        if (!specification.equals("")) {
+            Element spec = doc.createElement("span");
+            spec.setAttribute("class", "specification");
+            spec.appendChild(doc.createTextNode(specification));
+            element.appendChild(spec);
         }
 
-        if (!definitionText.equals ("")) {
-            Element text = doc.createElement ("span");
-            text.setAttribute ("class", "definitionText");
-            text.appendChild (doc.createTextNode (definitionText));
-            element.appendChild (text);
+        if (!definitionText.equals("")) {
+            Element text = doc.createElement("span");
+            text.setAttribute("class", "definitionText");
+            text.appendChild(doc.createTextNode(definitionText));
+            element.appendChild(text);
         }
 
         if (exampleGroup != null)
-            element.appendChild (exampleGroup.toElement (doc));
+            element.appendChild(exampleGroup.toElement(doc));
 
         if (subDefinitionGroup != null)
-            element.appendChild (subDefinitionGroup.toElement (doc));
+            element.appendChild(subDefinitionGroup.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Definition";
     }
 }

@@ -26,98 +26,98 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class Form {
     private String formLabel = "";
-    private String formText  = "";
+    private String formText = "";
     private Pronunciation pronunciation;
 
 
-    public String getFormLabel () {
+    public String getFormLabel() {
         return formLabel;
     }
 
-    public String getFormText () {
+    public String getFormText() {
         return formText;
     }
 
-    public Pronunciation getPronunciation () {
+    public Pronunciation getPronunciation() {
         return pronunciation;
     }
 
-    public void setFormLabel (String formLabel) {
+    public void setFormLabel(String formLabel) {
         this.formLabel = formLabel;
     }
 
-    public void setFormText (String formText) {
+    public void setFormText(String formText) {
         this.formText = formText;
     }
 
-    public void setPronunciation (Pronunciation pronunciation) {
+    public void setPronunciation(Pronunciation pronunciation) {
         this.pronunciation = pronunciation;
     }
 
 
-    public static Form fromElement (Element element) {
-        Form form = new Form ();
+    public static Form fromElement(Element element) {
+        Form form = new Form();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("formLabel")) {
-                    if (form.formLabel.equals ("")) {
-                        form.formLabel = span.getTextContent ();
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("formLabel")) {
+                    if (form.formLabel.equals("")) {
+                        form.formLabel = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Form Label'! Keeping first input.");
+                        System.err.println("Found additional 'Form Label'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("formText")) {
-                    if (form.formText.equals ("")) {
-                        form.formText = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("formText")) {
+                    if (form.formText.equals("")) {
+                        form.formText = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Form Text'! Keeping first input.");
+                        System.err.println("Found additional 'Form Text'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("pronunciation")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("pronunciation")) {
                     if (form.pronunciation == null) {
-                        form.pronunciation = Pronunciation.fromElement (span);
+                        form.pronunciation = Pronunciation.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Pronunciation'! Keeping first input.");
+                        System.err.println("Found additional 'Pronunciation'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Grammar', 'Specification', or 'Form Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println("Failed to create either 'Grammar', 'Specification', or 'Form Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return form;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "form");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "form");
 
-        if (!formLabel.equals ("")) {
-            Element label = doc.createElement ("span");
-            label.setAttribute ("class", "formLabel");
-            label.appendChild (doc.createTextNode (formLabel));
-            element.appendChild (label);
+        if (!formLabel.equals("")) {
+            Element label = doc.createElement("span");
+            label.setAttribute("class", "formLabel");
+            label.appendChild(doc.createTextNode(formLabel));
+            element.appendChild(label);
         }
 
-        if (!formText.equals ("")) {
-            Element text = doc.createElement ("span");
-            text.setAttribute ("class", "formText");
-            text.appendChild (doc.createTextNode (formText));
-            element.appendChild (text);
+        if (!formText.equals("")) {
+            Element text = doc.createElement("span");
+            text.setAttribute("class", "formText");
+            text.appendChild(doc.createTextNode(formText));
+            element.appendChild(text);
         }
 
         if (pronunciation != null)
-            element.appendChild (pronunciation.toElement (doc));
+            element.appendChild(pronunciation.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Form";
     }
 }

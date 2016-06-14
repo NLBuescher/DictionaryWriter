@@ -26,69 +26,69 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class DefinitionGroup {
-    private String                definitionGroupLabel = "";
-    private ArrayList<Definition> definitions          = new ArrayList<> ();
+    private String definitionGroupLabel = "";
+    private ArrayList<Definition> definitions = new ArrayList<>();
 
 
-    public String getDefinitionGroupLabel () {
+    public String getDefinitionGroupLabel() {
         return definitionGroupLabel;
     }
 
-    public ArrayList<Definition> getDefinitions () {
+    public ArrayList<Definition> getDefinitions() {
         return definitions;
     }
 
-    public void setDefinitionGroupLabel (String definitionGroupLabel) {
+    public void setDefinitionGroupLabel(String definitionGroupLabel) {
         this.definitionGroupLabel = definitionGroupLabel;
     }
 
 
-    public static DefinitionGroup fromElement (Element element) {
-        DefinitionGroup definitionGroup = new DefinitionGroup ();
+    public static DefinitionGroup fromElement(Element element) {
+        DefinitionGroup definitionGroup = new DefinitionGroup();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("definitionGroupLabel")) {
-                    if (definitionGroup.definitionGroupLabel.equals ("")) {
-                        definitionGroup.definitionGroupLabel = span.getTextContent ();
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("definitionGroupLabel")) {
+                    if (definitionGroup.definitionGroupLabel.equals("")) {
+                        definitionGroup.definitionGroupLabel = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Definition Group Label'! Keeping first input.");
+                        System.err.println("Found additional 'Definition Group Label'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("definition")) {
-                    definitionGroup.definitions.add (Definition.fromElement (span));
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("definition")) {
+                    definitionGroup.definitions.add(Definition.fromElement(span));
                 } else {
-                    System.err.println ("Failed to create either 'Definition Group Label' or 'Definition' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println("Failed to create either 'Definition Group Label' or 'Definition' from " + span + "! The span doesn't have a proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return definitionGroup;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "definitionGroup");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "definitionGroup");
 
-        if (!definitionGroupLabel.equals ("")) {
-            Element label = doc.createElement ("span");
-            label.setAttribute ("class", "definitionGroupLabel");
-            label.appendChild (doc.createTextNode (definitionGroupLabel));
-            element.appendChild (label);
+        if (!definitionGroupLabel.equals("")) {
+            Element label = doc.createElement("span");
+            label.setAttribute("class", "definitionGroupLabel");
+            label.appendChild(doc.createTextNode(definitionGroupLabel));
+            element.appendChild(label);
         }
 
         for (Definition definition : definitions)
-            element.appendChild (definition.toElement (doc));
+            element.appendChild(definition.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Definition Group";
     }
 }

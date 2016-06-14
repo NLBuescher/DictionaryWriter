@@ -27,83 +27,83 @@ import java.util.ArrayList;
  */
 public class Entry {
     private GrammarGroup grammarGroup;
-    private ArrayList<DefinitionGroup> definitionGroups = new ArrayList<> ();
+    private ArrayList<DefinitionGroup> definitionGroups = new ArrayList<>();
     private SubEntryGroup subEntryGroup;
 
 
-    public GrammarGroup getGrammarGroup () {
+    public GrammarGroup getGrammarGroup() {
         return grammarGroup;
     }
 
-    public ArrayList<DefinitionGroup> getDefinitionGroups () {
+    public ArrayList<DefinitionGroup> getDefinitionGroups() {
         return definitionGroups;
     }
 
-    public SubEntryGroup getSubEntryGroup () {
+    public SubEntryGroup getSubEntryGroup() {
         return subEntryGroup;
     }
 
-    public void setGrammarGroup (GrammarGroup grammarGroup) {
+    public void setGrammarGroup(GrammarGroup grammarGroup) {
         this.grammarGroup = grammarGroup;
     }
 
-    public void setSubEntryGroup (SubEntryGroup subEntryGroup) {
+    public void setSubEntryGroup(SubEntryGroup subEntryGroup) {
         this.subEntryGroup = subEntryGroup;
     }
 
 
-    public static Entry fromElement (Element element) {
-        Entry entry = new Entry ();
+    public static Entry fromElement(Element element) {
+        Entry entry = new Entry();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("grammarGroup")) {
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("grammarGroup")) {
                     if (entry.grammarGroup == null) {
-                        entry.grammarGroup = GrammarGroup.fromElement (span);
+                        entry.grammarGroup = GrammarGroup.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Grammar Group'! Keeping first input.");
+                        System.err.println("Found additional 'Grammar Group'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("definitionGroup")) {
-                    entry.definitionGroups.add (DefinitionGroup.fromElement (span));
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("definitionGroup")) {
+                    entry.definitionGroups.add(DefinitionGroup.fromElement(span));
 
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryGroup")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryGroup")) {
                     if (entry.subEntryGroup == null) {
-                        entry.subEntryGroup = SubEntryGroup.fromElement (span);
+                        entry.subEntryGroup = SubEntryGroup.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Sub-Entry Group'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Entry Group'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Grammar Group', 'Definition Group', or 'Sub-Entry Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println("Failed to create either 'Grammar Group', 'Definition Group', or 'Sub-Entry Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return entry;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "entry");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "entry");
 
         if (grammarGroup != null)
-            element.appendChild (grammarGroup.toElement (doc));
+            element.appendChild(grammarGroup.toElement(doc));
 
         for (DefinitionGroup definitionGroup : definitionGroups)
-            element.appendChild (definitionGroup.toElement (doc));
+            element.appendChild(definitionGroup.toElement(doc));
 
         if (subEntryGroup != null)
-            element.appendChild (subEntryGroup.toElement (doc));
+            element.appendChild(subEntryGroup.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Entry";
     }
 }

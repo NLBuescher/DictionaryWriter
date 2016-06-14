@@ -27,48 +27,48 @@ public class Index {
     private String d_value = "";
 
 
-    public String getTitle () {
+    public String getTitle() {
         return d_title;
     }
 
-    public String getValue () {
+    public String getValue() {
         return d_value;
     }
 
-    public void setTitle (String title) {
+    public void setTitle(String title) {
         this.d_title = title;
     }
 
-    public void setValue (String value) {
+    public void setValue(String value) {
         this.d_value = value;
     }
 
 
-    public static Index fromElement (Element element) {
-        Index index = new Index ();
+    public static Index fromElement(Element element) {
+        Index index = new Index();
 
-        if (element.hasAttribute ("d:title"))
-            index.d_title = element.getAttribute ("d:title");
+        if (element.hasAttribute("d:title"))
+            index.d_title = element.getAttribute("d:title");
         else
-            System.err.println ("Failed to get attribute 'd:title' from " + element.getTagName () + "! Left empty.");
+            System.err.println("Failed to get attribute 'd:title' from " + element.getTagName() + "! Left empty.");
 
-        if (element.hasAttribute ("d:value"))
-            index.d_value = element.getAttribute ("d:value");
+        if (element.hasAttribute("d:value"))
+            index.d_value = element.getAttribute("d:value");
         else
-            System.err.println ("Failed to get attribute 'd:value' from " + element.getTagName () + "! Left empty.");
+            System.err.println("Failed to get attribute 'd:value' from " + element.getTagName() + "! Left empty.");
 
         return index;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("d:index");
-        element.setAttribute ("d:title", d_title);
-        element.setAttribute ("d:value", d_value);
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("d:index");
+        element.setAttribute("d:title", d_title);
+        element.setAttribute("d:value", d_value);
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Index: " + d_value;
     }
 }

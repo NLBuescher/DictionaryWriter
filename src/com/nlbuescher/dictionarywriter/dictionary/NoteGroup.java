@@ -26,47 +26,47 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class NoteGroup {
-    private ArrayList<Note> notes = new ArrayList<> ();
+    private ArrayList<Note> notes = new ArrayList<>();
 
 
-    public ArrayList<Note> getNotes () {
+    public ArrayList<Note> getNotes() {
         return notes;
     }
 
 
-    public static NoteGroup fromElement (Element element) {
-        NoteGroup noteGroup = new NoteGroup ();
+    public static NoteGroup fromElement(Element element) {
+        NoteGroup noteGroup = new NoteGroup();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("note")) {
-                    noteGroup.notes.add (Note.fromElement (span));
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("note")) {
+                    noteGroup.notes.add(Note.fromElement(span));
                 } else {
-                    System.err.println ("Failed to create 'Note' from " + span + "! The span doesn't have the proper 'class' attribute.");
+                    System.err.println("Failed to create 'Note' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return noteGroup;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "noteGroup");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "noteGroup");
 
         for (Note note : notes)
-            element.appendChild (note.toElement (doc));
+            element.appendChild(note.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Note Group";
     }
 }

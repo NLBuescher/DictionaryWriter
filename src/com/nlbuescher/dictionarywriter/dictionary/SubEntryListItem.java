@@ -26,102 +26,102 @@ import javax.xml.parsers.ParserConfigurationException;
  */
 public class SubEntryListItem {
     private String subEntryListItemLabel = "";
-    private String specification         = "";
-    private String subEntryListItemText  = "";
+    private String specification = "";
+    private String subEntryListItemText = "";
 
 
-    public String getSubEntryListItemLabel () {
+    public String getSubEntryListItemLabel() {
         return subEntryListItemLabel;
     }
 
-    public String getSpecification () {
+    public String getSpecification() {
         return specification;
     }
 
-    public String getSubEntryListItemText () {
+    public String getSubEntryListItemText() {
         return subEntryListItemText;
     }
 
-    public void setSubEntryListItemLabel (String subEntryListItemLabel) {
+    public void setSubEntryListItemLabel(String subEntryListItemLabel) {
         this.subEntryListItemLabel = subEntryListItemLabel;
     }
 
-    public void setSpecification (String specification) {
+    public void setSpecification(String specification) {
         this.specification = specification;
     }
 
-    public void setSubEntryListItemText (String subEntryListItemText) {
+    public void setSubEntryListItemText(String subEntryListItemText) {
         this.subEntryListItemText = subEntryListItemText;
     }
 
 
-    public static SubEntryListItem fromElement (Element element) {
-        SubEntryListItem subEntryListItem = new SubEntryListItem ();
+    public static SubEntryListItem fromElement(Element element) {
+        SubEntryListItem subEntryListItem = new SubEntryListItem();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryListItemLabel")) {
-                    if (subEntryListItem.subEntryListItemLabel.equals ("")) {
-                        subEntryListItem.subEntryListItemLabel = span.getTextContent ();
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryListItemLabel")) {
+                    if (subEntryListItem.subEntryListItemLabel.equals("")) {
+                        subEntryListItem.subEntryListItemLabel = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Sub-Entry List Item Label'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Entry List Item Label'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("specification")) {
-                    if (subEntryListItem.specification.equals ("")) {
-                        subEntryListItem.specification = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("specification")) {
+                    if (subEntryListItem.specification.equals("")) {
+                        subEntryListItem.specification = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Specification'! Keeping first input.");
+                        System.err.println("Found additional 'Specification'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryListItemText")) {
-                    if (subEntryListItem.subEntryListItemText.equals ("")) {
-                        subEntryListItem.subEntryListItemText = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryListItemText")) {
+                    if (subEntryListItem.subEntryListItemText.equals("")) {
+                        subEntryListItem.subEntryListItemText = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Sub-Entry List Item Text'! Keeping first input.");
+                        System.err.println("Found additional 'Sub-Entry List Item Text'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Sub-Entry List Item Label', 'Specification', or 'Sub-Entry List Item Text' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println("Failed to create either 'Sub-Entry List Item Label', 'Specification', or 'Sub-Entry List Item Text' from " + span + "! The span doesn't have a proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return subEntryListItem;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "subEntryListItem");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "subEntryListItem");
 
-        if (!subEntryListItemLabel.equals ("")) {
-            Element label = doc.createElement ("span");
-            label.setAttribute ("class", "subEntryListItemLabel");
-            label.appendChild (doc.createTextNode (subEntryListItemLabel));
-            element.appendChild (label);
+        if (!subEntryListItemLabel.equals("")) {
+            Element label = doc.createElement("span");
+            label.setAttribute("class", "subEntryListItemLabel");
+            label.appendChild(doc.createTextNode(subEntryListItemLabel));
+            element.appendChild(label);
         }
 
-        if (!specification.equals ("")) {
-            Element spec = doc.createElement ("span");
-            spec.setAttribute ("class", "specification");
-            spec.appendChild (doc.createTextNode (specification));
-            element.appendChild (spec);
+        if (!specification.equals("")) {
+            Element spec = doc.createElement("span");
+            spec.setAttribute("class", "specification");
+            spec.appendChild(doc.createTextNode(specification));
+            element.appendChild(spec);
         }
 
-        if (!subEntryListItemText.equals ("")) {
-            Element text = doc.createElement ("span");
-            text.setAttribute ("class", "subEntryListItemText");
-            text.appendChild (doc.createTextNode (subEntryListItemText));
-            element.appendChild (text);
+        if (!subEntryListItemText.equals("")) {
+            Element text = doc.createElement("span");
+            text.setAttribute("class", "subEntryListItemText");
+            text.appendChild(doc.createTextNode(subEntryListItemText));
+            element.appendChild(text);
         }
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Sub-Entry List Item";
     }
 }

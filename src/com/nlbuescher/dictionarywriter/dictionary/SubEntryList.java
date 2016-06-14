@@ -26,47 +26,47 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class SubEntryList {
-    private ArrayList<SubEntryListItem> subEntryListItems = new ArrayList<> ();
+    private ArrayList<SubEntryListItem> subEntryListItems = new ArrayList<>();
 
 
-    public ArrayList<SubEntryListItem> getSubEntryListItems () {
+    public ArrayList<SubEntryListItem> getSubEntryListItems() {
         return subEntryListItems;
     }
 
 
-    public static SubEntryList fromElement (Element element) {
-        SubEntryList subEntryList = new SubEntryList ();
+    public static SubEntryList fromElement(Element element) {
+        SubEntryList subEntryList = new SubEntryList();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("subEntryListItem")) {
-                    subEntryList.subEntryListItems.add (SubEntryListItem.fromElement (span));
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("subEntryListItem")) {
+                    subEntryList.subEntryListItems.add(SubEntryListItem.fromElement(span));
                 } else {
-                    System.err.println ("Failed to create 'Sub-Entry List Item' from " + span + "! The span doesn't have the proper 'class' attribute.");
+                    System.err.println("Failed to create 'Sub-Entry List Item' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return subEntryList;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "subEntryList");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "subEntryList");
 
         for (SubEntryListItem subEntryListItem : subEntryListItems)
-            element.appendChild (subEntryListItem.toElement (doc));
+            element.appendChild(subEntryListItem.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Sub-Entry List";
     }
 }

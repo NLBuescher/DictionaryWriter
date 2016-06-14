@@ -26,58 +26,58 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class FormGroup {
-    private ArrayList<Form> forms = new ArrayList<> ();
+    private ArrayList<Form> forms = new ArrayList<>();
 
 
-    public ArrayList<Form> getForms () {
+    public ArrayList<Form> getForms() {
         return forms;
     }
 
 
-    public static FormGroup fromElement (Element element) {
-        FormGroup formGroup = new FormGroup ();
+    public static FormGroup fromElement(Element element) {
+        FormGroup formGroup = new FormGroup();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("form")) {
-                    formGroup.forms.add (Form.fromElement (span));
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("form")) {
+                    formGroup.forms.add(Form.fromElement(span));
                 } else {
-                    System.err.println ("Failed to create 'Form' from " + span + "! The span doesn't have the proper 'class' attribute.");
+                    System.err.println("Failed to create 'Form' from " + span + "! The span doesn't have the proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return formGroup;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "formGroup");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "formGroup");
 
-        element.appendChild (doc.createTextNode ("("));
+        element.appendChild(doc.createTextNode("("));
 
         int i = 0;
         for (Form form : forms) {
-            element.appendChild (form.toElement (doc));
+            element.appendChild(form.toElement(doc));
 
-            if (i < forms.size () - 1)
-                element.appendChild (doc.createTextNode (","));
+            if (i < forms.size() - 1)
+                element.appendChild(doc.createTextNode(","));
 
             i++;
         }
 
-        element.appendChild (doc.createTextNode (")"));
+        element.appendChild(doc.createTextNode(")"));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Form Group";
     }
 }

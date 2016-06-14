@@ -26,49 +26,49 @@ import java.util.ArrayList;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class Dictionary {
-    private final String               XMLNS   = "http://www.w3.org/1999/xhtml";
-    private final String               XMLNS_D = "http://www.apple.com/DTDs/DictionaryService-1.0.rng";
-    private       ArrayList<DictEntry> entries = new ArrayList<> ();
+    private final String XMLNS = "http://www.w3.org/1999/xhtml";
+    private final String XMLNS_D = "http://www.apple.com/DTDs/DictionaryService-1.0.rng";
+    private ArrayList<DictEntry> entries = new ArrayList<>();
 
 
-    public ArrayList<DictEntry> getEntries () {
+    public ArrayList<DictEntry> getEntries() {
         return entries;
     }
 
 
-    public static Dictionary fromElement (Element element) throws Exception {
-        if (element.getTagName ().equals ("d:dictionary")) {
-            Dictionary dictionary = new Dictionary ();
-            NodeList nodes = element.getChildNodes ();
-            for (int i = 0; i < nodes.getLength (); i++) {
-                Node node = nodes.item (i);
-                if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("d:entry")) {
-                    dictionary.entries.add (DictEntry.fromElement ((Element) node));
+    public static Dictionary fromElement(Element element) throws Exception {
+        if (element.getTagName().equals("d:dictionary")) {
+            Dictionary dictionary = new Dictionary();
+            NodeList nodes = element.getChildNodes();
+            for (int i = 0; i < nodes.getLength(); i++) {
+                Node node = nodes.item(i);
+                if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("d:entry")) {
+                    dictionary.entries.add(DictEntry.fromElement((Element) node));
 
-                } else if (node.getNodeType () == Node.TEXT_NODE) {
+                } else if (node.getNodeType() == Node.TEXT_NODE) {
                 } else {
-                    System.err.println ("Failed to create 'DictEntry' from " + node.getNodeName () + "! The element could not be imported.");
+                    System.err.println("Failed to create 'DictEntry' from " + node.getNodeName() + "! The element could not be imported.");
                 }
             }
             return dictionary;
         } else {
-            System.err.println ("Failed to create top level member 'Dictionary' from " + element.getTagName () + "! The file could not be imported.");
+            System.err.println("Failed to create top level member 'Dictionary' from " + element.getTagName() + "! The file could not be imported.");
             return null;
         }
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("d:dictionary");
-        element.setAttribute ("xmlns", XMLNS);
-        element.setAttribute ("xmlns:d", XMLNS_D);
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("d:dictionary");
+        element.setAttribute("xmlns", XMLNS);
+        element.setAttribute("xmlns:d", XMLNS_D);
 
         for (DictEntry dictEntry : entries)
-            element.appendChild (dictEntry.toElement (doc));
+            element.appendChild(dictEntry.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Dictionary";
     }
 }

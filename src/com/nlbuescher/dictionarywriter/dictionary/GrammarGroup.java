@@ -25,99 +25,99 @@ import javax.xml.parsers.ParserConfigurationException;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 public class GrammarGroup {
-    private String grammar       = "";
+    private String grammar = "";
     private String specification = "";
     private FormGroup formGroup;
 
 
-    public String getGrammar () {
+    public String getGrammar() {
         return grammar;
     }
 
-    public String getSpecification () {
+    public String getSpecification() {
         return specification;
     }
 
-    public FormGroup getFormGroup () {
+    public FormGroup getFormGroup() {
         return formGroup;
     }
 
-    public void setGrammar (String grammar) {
+    public void setGrammar(String grammar) {
         this.grammar = grammar;
     }
 
-    public void setSpecification (String specification) {
+    public void setSpecification(String specification) {
         this.specification = specification;
     }
 
-    public void setFormGroup (FormGroup formGroup) {
+    public void setFormGroup(FormGroup formGroup) {
         this.formGroup = formGroup;
     }
 
 
-    public static GrammarGroup fromElement (Element element) {
-        GrammarGroup grammarGroup = new GrammarGroup ();
+    public static GrammarGroup fromElement(Element element) {
+        GrammarGroup grammarGroup = new GrammarGroup();
 
-        NodeList nodes = element.getChildNodes ();
-        for (int i = 0; i < nodes.getLength (); i++) {
-            Node node = nodes.item (i);
-            if (node.getNodeType () == Node.ELEMENT_NODE && node.getNodeName ().equals ("span")) {
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
                 Element span = ((Element) node);
-                if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("grammar")) {
-                    if (grammarGroup.grammar.equals ("")) {
-                        grammarGroup.grammar = span.getTextContent ();
+                if (span.hasAttribute("class") && span.getAttribute("class").equals("grammar")) {
+                    if (grammarGroup.grammar.equals("")) {
+                        grammarGroup.grammar = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Grammar'! Keeping first input.");
+                        System.err.println("Found additional 'Grammar'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("specification")) {
-                    if (grammarGroup.specification.equals ("")) {
-                        grammarGroup.specification = span.getTextContent ();
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("specification")) {
+                    if (grammarGroup.specification.equals("")) {
+                        grammarGroup.specification = span.getTextContent();
                     } else {
-                        System.err.println ("Found additional 'Specification'! Keeping first input.");
+                        System.err.println("Found additional 'Specification'! Keeping first input.");
                     }
-                } else if (span.hasAttribute ("class") && span.getAttribute ("class").equals ("formGroup")) {
+                } else if (span.hasAttribute("class") && span.getAttribute("class").equals("formGroup")) {
                     if (grammarGroup.formGroup == null) {
-                        grammarGroup.formGroup = FormGroup.fromElement (span);
+                        grammarGroup.formGroup = FormGroup.fromElement(span);
                     } else {
-                        System.err.println ("Found additional 'Form Group'! Keeping first input.");
+                        System.err.println("Found additional 'Form Group'! Keeping first input.");
                     }
                 } else {
-                    System.err.println ("Failed to create either 'Grammar', 'Specification', or 'Form Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
+                    System.err.println("Failed to create either 'Grammar', 'Specification', or 'Form Group' from " + span + "! The span doesn't have a proper 'class' attribute.");
                 }
-            } else if (node.getNodeType () == Node.TEXT_NODE) {
+            } else if (node.getNodeType() == Node.TEXT_NODE) {
             } else {
-                System.err.println ("Failed to create anything from " + node + "! The element could not be imported.");
+                System.err.println("Failed to create anything from " + node + "! The element could not be imported.");
             }
         }
 
         return grammarGroup;
     }
 
-    public Element toElement (Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement ("span");
-        element.setAttribute ("class", "grammarGroup");
+    public Element toElement(Document doc) throws ParserConfigurationException {
+        Element element = doc.createElement("span");
+        element.setAttribute("class", "grammarGroup");
 
-        if (!grammar.equals ("")) {
-            Element gram = doc.createElement ("span");
-            gram.setAttribute ("class", "grammar");
-            gram.appendChild (doc.createTextNode (grammar));
-            element.appendChild (gram);
+        if (!grammar.equals("")) {
+            Element gram = doc.createElement("span");
+            gram.setAttribute("class", "grammar");
+            gram.appendChild(doc.createTextNode(grammar));
+            element.appendChild(gram);
         }
 
-        if (!specification.equals ("")) {
-            Element spec = doc.createElement ("span");
-            spec.setAttribute ("class", "specification");
-            spec.appendChild (doc.createTextNode (specification));
-            element.appendChild (spec);
+        if (!specification.equals("")) {
+            Element spec = doc.createElement("span");
+            spec.setAttribute("class", "specification");
+            spec.appendChild(doc.createTextNode(specification));
+            element.appendChild(spec);
         }
 
         if (formGroup != null)
-            element.appendChild (formGroup.toElement (doc));
+            element.appendChild(formGroup.toElement(doc));
 
         return element;
     }
 
-    public String toString () {
+    public String toString() {
         return "Grammar Group";
     }
 }
