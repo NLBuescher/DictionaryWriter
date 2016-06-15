@@ -104,6 +104,7 @@ public class Controller implements Initializable {
 
     private void addToTree(Object item, TreeItem<Object> root) {
         if (item == null) {
+            System.err.println("The item is null!");
 
         } else if (item instanceof Dictionary) {
             Dictionary dictionary = ((Dictionary) item);
@@ -397,6 +398,8 @@ public class Controller implements Initializable {
         TreeItem<Object> treeItem = treeView.getSelectionModel().getSelectedItem();
 
         if (treeItem == null) {
+            System.err.println("The item is null!");
+
         } else if (treeItem.getValue() instanceof Definition) {
 
             HBox exampleGroupRow = new HBox();
@@ -1049,7 +1052,11 @@ public class Controller implements Initializable {
         editorVBox.getChildren().clear();
 
         if (treeItem == null) {
+            System.err.println("The item is null!");
+
         } else if (treeItem.getValue() == null) {
+            System.err.println("The items value is null!");
+
 
         } else if (treeItem.getValue() instanceof Definition) {
 
@@ -1724,6 +1731,8 @@ public class Controller implements Initializable {
         TreeItem<Object> treeItem = treeView.getSelectionModel().getSelectedItem();
 
         if (treeItem == null) { // null check to avoid null pointer exception
+            System.err.println("The item is null!");
+
         } else if (treeItem.getValue() instanceof Definition) {
             ObservableList<TreeItem<Object>> list = treeItem.getParent().getChildren();
 
@@ -1913,6 +1922,8 @@ public class Controller implements Initializable {
         TreeItem<Object> treeItem = treeView.getSelectionModel().getSelectedItem();
 
         if (treeItem == null) { // null check to avoid null pointer exception
+            System.err.println("The item is null!");
+
         } else if (treeItem.getValue() instanceof Definition) {
             ObservableList<TreeItem<Object>> list = treeItem.getParent().getChildren();
 
@@ -2135,6 +2146,7 @@ public class Controller implements Initializable {
 
         if (!(treeItem.getValue() instanceof Dictionary)) {
             if (treeItem.getValue() == null) {
+                System.err.println("The item is null!");
 
             } else if (treeItem.getValue() instanceof Definition) {
                 ((DefinitionGroup) treeItem.getParent().getValue()).getDefinitions().remove(treeItem.getValue());
