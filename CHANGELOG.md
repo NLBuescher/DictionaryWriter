@@ -9,6 +9,11 @@
 - have buttons start as `disabled` by default and have them enable themselves based on whether they have a function in the current context
 - add customizable variants to the Pronunciation class so this program can be used for any dictionary in any language
 - enable the user to edit indices in-place
+- rewrite the app to use the xml dom as a model directly rather than convert it. (need to figure out how to display something other than an Object's `toString` in the TreeView)
+
+## Release v1.3.0
+
+
 
 ## Release v1.2.0
 
