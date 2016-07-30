@@ -2,6 +2,7 @@ package com.nlbuescher.dictionarywriter;
 
 import com.nlbuescher.dictionarywriter.dictionary.*;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Point2D;
@@ -65,26 +66,25 @@ public class Controller implements Initializable {
     private Dictionary dictionary;
 
 
-    public BorderPane root;
+    @FXML private BorderPane root;
 
-    public MenuBar menuBar;
-    public MenuItem newMenuItem;
-    public MenuItem openMenuItem;
-    public MenuItem saveMenuItem;
-    public MenuItem saveAsMenuItem;
+    @FXML private MenuBar menuBar;
+    @FXML private MenuItem newMenuItem;
+    @FXML private MenuItem openMenuItem;
+    @FXML private MenuItem saveMenuItem;
+    @FXML private MenuItem saveAsMenuItem;
 
-    public Button addItemButton;
+    @FXML private Button addItemButton;
 
-    public TreeView<Object> treeView;
+    @FXML private TreeView<Object> treeView;
 
-    public WebView previewWebView;
-    public VBox editorVBox;
+    @FXML private WebView previewWebView;
+    @FXML private VBox editorVBox;
 
-    public Label statusBarLabel;
+    @FXML private Label statusBarLabel;
 
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    @Override public void initialize(URL location, ResourceBundle resources) {
         String os = System.getProperty("os.name");
 
         if (os != null && (os.startsWith("Mac"))) {
@@ -2261,7 +2261,7 @@ public class Controller implements Initializable {
                             .replaceFirst("<d:dictionary", "\n<d:dictionary")
                             .replaceAll("\\n[\\s]*<span d:pr", "<span d:pr")
                             .replaceAll(">\\(<", ">\n\t\t\t\t\t\t(\n\t\t\t\t\t\t<")
-                            .replaceAll(">,<", ">\n\t\t\t\t\t\t,\t\t\t\t\t\t\n<")
+                            .replaceAll(">,<", ">\n\t\t\t\t\t\t,\n\t\t\t\t\t\t<")
                             .replaceAll(">\\)<", ">\n\t\t\t\t\t\t)\n\t\t\t\t\t<")
                             .replaceAll("#(.)", "<span id=\"$1\"/>")
                             .replaceAll("\\*\\*\\*(.*?)\\*\\*\\*", "<b><i>$1</i></b>")
