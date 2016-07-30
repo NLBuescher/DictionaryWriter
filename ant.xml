@@ -5,6 +5,7 @@
     <property environment="env"/>
 
     <property name="projectname" value="DictionaryWriter"/>
+    <property name="appname" value="DictionaryWriter"/>
     <property name="bundlename" value="Dictionary Writer"/>
     <property name="mainclass" value="com.nlbuescher.dictionarywriter.DictionaryWriter"/>
     <property name="artifact.dir" value="out/artifacts/DictionaryWriter_jar"/>
@@ -14,12 +15,12 @@
     <target name="clean">
         <mkdir dir="${release.dir}"/>
         <delete dir="${release.dir}/DictionaryWriter.app"/>
-        <delete file="${release.dir}/${projectname}_mac.zip"/>
+        <delete file="${release.dir}/${appname}_mac.zip"/>
     </target>
 
     <!-- create mac osx 'bundle' -->
     <target name="create-bundle">
-        <copy file="${artifact.dir}/${projectname}.jar" todir="${release.dir}"/>
+        <copy file="${artifact.dir}/${projectname}.jar" tofile="${release.dir}/${appname}.jar"/>
         <bundleapp
                 outputdirectory="${release.dir}"
                 name="${bundlename}"
@@ -31,7 +32,7 @@
                 mainclassname="${mainclass}">
 
             <runtime dir="${env.JAVA_HOME}"/>
-            <classpath file="${release.dir}/${projectname}.jar"/>
+            <classpath file="${release.dir}/${appname}.jar"/>
 
             <option value="-Xdock:icon=Contents/Resources/DictionaryWriter.icns"/>
             <option value="-Dapple.awt.application.name=WikiReader"/>
@@ -44,7 +45,7 @@
 
     <!-- create zip -->
     <target name="zip">
-        <zip basedir="${release.dir}" excludes="${projectname}.jar" destfile="${release.dir}/${projectname}_mac.zip"/>
+        <zip basedir="${release.dir}" excludes="${appname}.jar" destfile="${release.dir}/${appname}_mac.zip"/>
     </target>
 
     <!-- default -->
