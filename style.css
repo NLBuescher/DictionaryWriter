@@ -89,7 +89,7 @@ span.definition {
 	margin-top: 1.7em;
 }
 span.definitionGroup {}
-span.definitionGroupLabel {
+span.definitionGroupHeading {
 	display: block;
 	font-weight: bold;
 	margin-bottom: -1.2em;
@@ -152,7 +152,7 @@ span.headGroup span.pronunciation {
 	font-size: 120%;
 	vertical-align: 12%;
 }
-span.headWord {
+span.heading {
 	font-size: 170%;
 }
 

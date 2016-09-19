@@ -36,47 +36,14 @@ public class D_entry {
         this.indexText = "";
     }
 
-    public D_entry(String entryText) {
-        this();
-        this.entryText = entryText;
-        updateTitle();
-    }
-
     public D_entry(Element element) throws Exception {
+        this();
         if (!element.getTagName().equals("d:entry"))
             throw new Exception("The element is does not have the proper tag!");
 
-        this.title = "";
-
-        NodeList nodes = element.getChildNodes();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-
-            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("span")) {
-                Element child = (Element) node;
-
-                if (child.getAttribute("class").equals("headGroup")) {
-                    NodeList childNodes = child.getChildNodes();
-
-                    for (int j = 0; j < childNodes.getLength(); j++){
-                        Node childNode = childNodes.item(j);
-
-                        if (childNode.getNodeType() == Node.ELEMENT_NODE && childNode.getNodeName().equals("span")) {
-                            Element childChild = (Element) childNode;
-
-                            if (childChild.getAttribute("class").equals("heading")) {
-                                this.title = childChild.getTextContent().trim();
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (i == nodes.getLength() - 1)
-                System.err.println("Couldn't find a 'heading' element. Setting title to empty!");
-        }
-
-        this.entryText = textFromElement(element);
+        this.title = element.getAttribute("d:title"); // Replaced convoluted way of determining title from heading
+                                                      // element with 'd:title' attribute retrieval
+        getTextFromElement(element);
     }
 
     public String getEntryText() {
@@ -106,7 +73,7 @@ public class D_entry {
 
     private void updateTitle() {
         if (!this.entryText.replaceAll("# (.*?) #.*", "$1").equals(entryText))
-            this.title = this.entryText.replaceAll("# (.*?) #.*", "$1");
+            this.title = this.entryText.replaceAll("# (.*?) #.*", "$1").replaceAll("%", "");
     }
 
     public Element toElementWithDocument(Document document) {
@@ -152,6 +119,8 @@ public class D_entry {
             // Parse EntryGroup
             if (d_entryContext.entryGroup() != null)
                 element.appendChild(elementFromContextWithDocument(d_entryContext.entryGroup(), document));
+
+            insertIndicesToElementWithDocument(element, document);
         }
         
         // headGroup
@@ -413,8 +382,8 @@ public class D_entry {
             label.appendChild(document.createTextNode(exampleLabel));
             element.appendChild(label);
 
-            // Get example entryText
-            String exampleText = exampleContext.exampleText().getText().replaceAll("[\\s\\t]*: (.*)", "$1");
+            // Get example text
+            String exampleText = exampleContext.exampleText().getText().replaceAll("[\\s\\t]*: (.*)", "$1").trim();
             Element text = document.createElement("span");
             text.setAttribute("class", "exampleText");
             text.appendChild(document.createTextNode(exampleText));
@@ -422,7 +391,7 @@ public class D_entry {
 
             // Get example translation
             if (exampleContext.exampleTranslation() != null) {
-                String exampleTranslation = exampleContext.exampleTranslation().getText().replaceAll("[\\s\\t]*--- (.*)", " — $1");
+                String exampleTranslation = exampleContext.exampleTranslation().getText().replaceAll("[\\s\\t]*--- (.*)", " — $1").trim();
                 Element translation = document.createElement("span");
                 translation.setAttribute("class", "exampleTranslation");
                 translation.appendChild(document.createTextNode(exampleTranslation));
@@ -509,7 +478,7 @@ public class D_entry {
 
             // Get sub-entry entryText
             if (subEntryContext.subEntryList() == null) {
-                String subEntryText = subEntryContext.SubEntryText().getText().replaceAll("''' (.+) '''", "$1").trim();
+                String subEntryText = subEntryContext.SubEntryText().getText().replaceAll("'''[ \n](.+)[ \n]'''", "$1").trim();
                 Element text = document.createElement("span");
                 text.setAttribute("class", "subEntryText");
                 text.appendChild(document.createTextNode(subEntryText));
@@ -582,8 +551,243 @@ public class D_entry {
         return element;
     }
 
-    private String textFromElement(Element element) {
-        return null;
+    private void insertIndicesToElementWithDocument(Element element, Document document) {
+
+        String[] indices = indexText.split("\n");
+        for (int i = indices.length - 1; i >= 0; i--) {
+
+            String[] indexValues = indices[i].split(":");
+            if (indexValues.length == 2) {
+                Element index = document.createElement("d:index");
+
+                index.setAttribute("d:title", indexValues[0].trim());
+                index.setAttribute("d:value", indexValues[1].trim());
+
+                element.insertBefore(index, element.getFirstChild());
+            } else {
+                System.err.println("The index (" + indices[i] +  ") was malformed! Ignoring it.");
+            }
+        }
+    }
+
+    private void getTextFromElement(Element element) {
+
+        switch (element.getTagName()) {
+
+            case "d:entry":
+                processChildrenForElement(element);
+                break;
+            case "d:index":
+                indexText += element.getAttribute("d:title")
+                        + ":"
+                        + element.getAttribute("d:value")
+                        + "\n";
+                break;
+            case "span":
+                switch (element.getAttribute("class")) {
+
+                    case "headGroup":
+                        processChildrenForElement(element);
+                        entryText += "\n";
+                        break;
+                    case "heading":
+                        entryText += "# " + title + " #\n";
+                        break;
+                    case "pronunciationGroup":
+                        NodeList children = element.getChildNodes();
+                        for (int i = 0; i < children.getLength(); i++) {
+                            Node node = children.item(i);
+                            if (node.getNodeType() == Node.ELEMENT_NODE
+                                    && ((Element) node).hasAttribute("d:pr")) {
+
+                                if (((Element) element.getParentNode()).getAttribute("class").equals("form"))
+                                    entryText += "    ";
+
+                                entryText += "|" + node.getTextContent() + "|(" + ((Element) node).getAttribute("d:pr") + ")\n";
+                            }
+                        }
+                        break;
+                    case "entryGroup":
+                        processChildrenForElement(element);
+                        break;
+                    case "entry":
+                        processChildrenForElement(element);
+                        break;
+                    case "grammarGroup":
+                        processChildrenForElement(element);
+                        entryText += "\n";
+                        break;
+                    case "grammar":
+                        entryText += "## " + element.getTextContent().trim() + " ##\n";
+                        break;
+                    case "formGroup":
+                        processChildrenForElement(element);
+                        break;
+                    case "form":
+                        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+                            Node node = element.getChildNodes().item(i);
+                            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                                Element child = (Element) node;
+                                switch (child.getAttribute("class")) {
+                                    case "formLabel":
+                                        entryText += "{" + child.getTextContent().replaceAll(": ", "").trim() + "}";
+                                        break;
+                                    case "formText":
+                                        entryText += "(" + child.getTextContent().trim() + ")\n";
+                                        break;
+                                    default:
+                                        getTextFromElement(child);
+                                }
+                            }
+                        }
+                        break;
+                    case "definitionGroup":
+                        processChildrenForElement(element);
+                        entryText += "\n";
+                        break;
+                    case "definitionGroupHeading":
+                        entryText += "### " + element.getTextContent().trim() + " ###\n";
+                        break;
+                    case "definition":
+                        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+                            Node node = element.getChildNodes().item(i);
+                            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                                Element child = (Element) node;
+                                switch (child.getAttribute("class")) {
+                                    case "definitionLabel":
+                                        if (child.getTextContent().trim().matches("[0-9]+"))
+                                            entryText += child.getTextContent().trim() + ". ";
+                                        else
+                                            entryText += "- ";
+                                        break;
+                                    case "specification":
+                                        entryText += child.getTextContent().trim() + " ";
+                                        break;
+                                    case "definitionText":
+                                        entryText += child.getTextContent().trim() + "\n";
+                                        break;
+                                    default:
+                                        getTextFromElement(child);
+                                }
+                            }
+                        }
+                        break;
+                    case "exampleGroup":
+                        processChildrenForElement(element);
+                        break;
+                    case "example":
+                        String indent = "    ";
+                        // Check if the example is inside a subDefinition and increase the indent if so
+                        if (element.getParentNode().getParentNode().getNodeType() == Node.ELEMENT_NODE
+                                && ((Element) element.getParentNode().getParentNode()).getAttribute("class").equals("subDefinition"))
+                            indent += "    ";
+
+                        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+                            Node node = element.getChildNodes().item(i);
+                            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                                Element child = (Element) node;
+                                switch (child.getAttribute("class")) {
+                                    case "exampleLabel":
+                                        break;
+                                    case "exampleText":
+                                        entryText += indent + ": " + child.getTextContent().trim() + "\n";
+                                        break;
+                                    case "exampleTranslation":
+                                        entryText += indent + "--- " + child.getTextContent().replaceAll(" — ", "").trim() + "\n";
+                                        break;
+                                    default:
+                                        getTextFromElement(child);
+                                }
+                            }
+                        }
+                        break;
+                    case "subDefinitionGroup":
+                        processChildrenForElement(element);
+                        break;
+                    case "subDefinition":
+                        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+                            Node node = element.getChildNodes().item(i);
+                            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                                Element child = (Element) node;
+                                switch (child.getAttribute("class")) {
+                                    case "subDefinitionLabel":
+                                        entryText += "    - ";
+                                        break;
+                                    case "specification":
+                                        entryText += child.getTextContent().trim() + " ";
+                                        break;
+                                    case "subDefinitionText":
+                                        entryText += child.getTextContent().trim() + "\n";
+                                        break;
+                                    default:
+                                        getTextFromElement(child);
+                                }
+                            }
+                        }
+                        break;
+                    case "subEntryGroup":
+                        processChildrenForElement(element);
+                        break;
+                    case "subEntry":
+                        processChildrenForElement(element);
+                        break;
+                    case "subEntryLabel":
+                        String underline = "";
+
+                        for (int i = 0; i < element.getTextContent().trim().length(); i++)
+                            underline += "-";
+
+                        entryText += element.getTextContent().trim() + "\n" + underline + "\n\n";
+                        break;
+                    case "subEntryText":
+                        entryText += "'''\n" + element.getTextContent().trim() + "\n'''\n\n";
+                        break;
+                    case "subEntryList":
+                        processChildrenForElement(element);
+                        entryText += "\n";
+                        break;
+                    case "subEntryListItem":
+                        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+                            Node node = element.getChildNodes().item(i);
+                            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                                Element child = (Element) node;
+                                switch (child.getAttribute("class")) {
+                                    case "subEntryListItemLabel":
+                                        entryText += "-- ";
+                                        break;
+                                    case "specification":
+                                        entryText += child.getTextContent().trim() + " ";
+                                        break;
+                                    case "subEntryListItemText":
+                                        entryText += child.getTextContent().trim() + "\n";
+                                        break;
+                                    default:
+                                        getTextFromElement(child);
+                                }
+                            }
+                        }
+                        break;
+                    case "noteGroup":
+                        processChildrenForElement(element);
+                        break;
+                    case "note":
+                        entryText += "\"\"\"\n" + element.getTextContent().trim() + "\n\"\"\"\n\n";
+                        break;
+                    default:
+                        System.err.println("The span's class did not match any expected inputs! Ignoring.");
+                }
+                break;
+            default:
+                System.err.println("The element's tag did not match any expected inputs! Ignoring.");
+        }
+    }
+
+    private void processChildrenForElement(Element element) {
+        for (int i = 0; i < element.getChildNodes().getLength(); i++) {
+            Node node = element.getChildNodes().item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE)
+                getTextFromElement((Element) node);
+        }
     }
 
     @Override public String toString() {

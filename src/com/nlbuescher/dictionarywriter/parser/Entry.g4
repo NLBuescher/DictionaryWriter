@@ -74,11 +74,11 @@ Note
     ;
 
 ExampleText
-    : Indent? ':' ~[\r\n]*? Newline
+    : Indent? ':' ~[\r\n]*? (Newline|EOF)
     ;
 
 ExampleTranslation
-    : Indent? '--- ' ~[\r\n]*? Newline
+    : Indent? '--- ' ~[\r\n]*? (Newline|EOF)
     ;
 
 
@@ -129,7 +129,7 @@ form
     ;
 
 definitionGroup
-    : (definitionGroupHeading)? definition+
+    : definitionGroupHeading? definition+
     ;
 
 definitionGroupHeading
@@ -188,4 +188,3 @@ noteGroup
 note
     : Note
     ;
-

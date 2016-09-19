@@ -51,6 +51,11 @@
                         <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
+            <MenuItem fx:id="importMenuItem" mnemonicParsing="false" onAction="#importFile" text="Import...">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="I" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
                 <SeparatorMenuItem mnemonicParsing="false" />
                 <MenuItem fx:id="saveMenuItem" mnemonicParsing="false" onAction="#saveFile" text="Save">
                     <accelerator>
@@ -102,14 +107,14 @@
                     </Button>
                 </children>
             </HBox>
-            <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
+            <TreeView fx:id="treeView" prefHeight="200.0" prefWidth="200.0" showRoot="false" VBox.vgrow="ALWAYS" />
         </VBox>
     </left>
    <center>
-            <WebView fx:id="preview" minHeight="-1.0" minWidth="-1.0" prefHeight="200.0" prefWidth="400.0" BorderPane.alignment="CENTER" />
+            <WebView fx:id="preview" minHeight="-1.0" minWidth="-1.0" prefHeight="200.0" prefWidth="300.0" BorderPane.alignment="CENTER" />
    </center>
    <right>
-        <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="300.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+        <TabPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
             <tabs>
                 <Tab text="Entry">
                     <content>

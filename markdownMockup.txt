@@ -35,7 +35,9 @@
 DECLINATIO
 ----------
 
-''' Solum formas plurales habet. '''
+'''
+Solum formas plurales habet.
+'''
 
 
 

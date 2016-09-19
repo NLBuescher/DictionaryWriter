@@ -41,30 +41,30 @@
 
 <xsl:template match="*[@id='J']">
     <xsl:message><xsl:value-of select="$la_text"/></xsl:message>
-    <xsl:if test="$la_text = '0'"><xsl:entryText>I</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '1'"><xsl:entryText>I</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '2'"><xsl:entryText>J</xsl:entryText></xsl:if>
+    <xsl:if test="$la_text = '0'"><xsl:text>I</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '1'"><xsl:text>I</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '2'"><xsl:text>J</xsl:text></xsl:if>
 </xsl:template>
 
 <xsl:template match="*[@id='j']">
     <xsl:message><xsl:value-of select="$la_text"/></xsl:message>
-    <xsl:if test="$la_text = '0'"><xsl:entryText>i</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '1'"><xsl:entryText>i</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '2'"><xsl:entryText>j</xsl:entryText></xsl:if>
+    <xsl:if test="$la_text = '0'"><xsl:text>i</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '1'"><xsl:text>i</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '2'"><xsl:text>j</xsl:text></xsl:if>
 </xsl:template>
 
 <xsl:template match="*[@id='v']">
     <xsl:message><xsl:value-of select="$la_text"/></xsl:message>
-    <xsl:if test="$la_text = '0'"><xsl:entryText>u</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '1'"><xsl:entryText>v</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '2'"><xsl:entryText>v</xsl:entryText></xsl:if>
+    <xsl:if test="$la_text = '0'"><xsl:text>u</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '1'"><xsl:text>v</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '2'"><xsl:text>v</xsl:text></xsl:if>
 </xsl:template>
 
 <xsl:template match="*[@id='U']">
     <xsl:message><xsl:value-of select="$la_text"/></xsl:message>
-    <xsl:if test="$la_text = '0'"><xsl:entryText>V</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '1'"><xsl:entryText>U</xsl:entryText></xsl:if>
-    <xsl:if test="$la_text = '2'"><xsl:entryText>U</xsl:entryText></xsl:if>
+    <xsl:if test="$la_text = '0'"><xsl:text>V</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '1'"><xsl:text>U</xsl:text></xsl:if>
+    <xsl:if test="$la_text = '2'"><xsl:text>U</xsl:text></xsl:if>
 </xsl:template>
 
 <!-- <xsl:template match="span[@class='column']">

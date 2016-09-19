@@ -20,19 +20,8 @@ public class Dictionary implements Serializable {
         entries = new ArrayList<>();
     }
 
-    /**
-     * The text input is assumed to be from a MarkDown Dictionary file and therefore have a specific format
-     * @param text the Dictionary text with which to initialize the entry
-     */
-    public Dictionary(String text) {
-        this();
-        String[] entryStrings = text.split("\n\n==========\n\n");
-
-        for (String entry : entryStrings)
-            entries.add(new D_entry(entry));
-    }
-
     public Dictionary(Element element) throws Exception {
+        this();
         if (!element.getTagName().equals("d:dictionary"))
             throw new Exception("The element is not a 'd:dictionary'");
 
@@ -42,6 +31,8 @@ public class Dictionary implements Serializable {
 
             if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("d:entry"))
                 entries.add(new D_entry((Element) node));
+            else if (node.getNodeType() != Node.TEXT_NODE)
+                System.err.println("The node is either not an element, not a text node, or not a 'd:entry'! Ignoring.");
         }
     }
 
@@ -59,20 +50,6 @@ public class Dictionary implements Serializable {
             element.appendChild(entry.toElementWithDocument(document));
 
         return element;
-    }
-
-    public String getTextContent() {
-        String text = "";
-
-        int size = entries.size();
-        for (D_entry entry : entries) {
-            text += entry.getEntryText();
-
-            if (--size != 0)
-                text += "\n\n==========\n\n";
-        }
-
-        return text;
     }
 
     public String toString() {
