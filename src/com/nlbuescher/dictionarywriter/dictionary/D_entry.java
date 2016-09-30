@@ -19,12 +19,9 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.StringWriter;
+import java.io.*;
 
-public class D_entry {
+public class D_entry implements Serializable {
     private String title;
     private String entryText;
     private String indexText;

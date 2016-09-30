@@ -4,7 +4,6 @@
 
 # generated files
 out/
-release/
 ~preview.xhtml
 
 .DS_Store
