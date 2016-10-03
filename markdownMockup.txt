@@ -1,0 +1,119 @@
+# aliquot #
+|ˈa.li.kʷɔt|(CL)
+|ˈa.li.kwɔt|(VA)
+
+## ad%jecti%vum immutabile ##
+
+- some, several, a few
+
+
+
+# annus #
+|ˈan.nʊs|(LA)
+
+## nomen, masculini, 2^ae declinationis ##
+{geniti%vus}(annī)
+    |ˈan.niː|(CL)
+    |ˈan.ni|(VA)
+
+- a year
+    - [per extentionem] a season or time
+
+
+
+# arma |ˈar.ma|("LA") #
+
+## nomen, neutri, pluralis, 2^ae declinationis ##
+{geniti%vus}(armōrum)
+    |arˈmoː.rũ|(CL)
+    |arˈmo.rum|(VA)
+
+1. arms, weapons
+2. armor or equipment
+    - [per translationem] means of protection or defense
+
+DECLINATIO
+----------
+
+'''
+Solum formas plurales habet.
+'''
+
+
+
+# atque #
+|ˈat.kʷɛ|(CL)
+|ˈat.kwɛ|(VA)
+
+## con%junctio ##
+
+1. and, and also, and even
+2. yet, nevertheless
+3. [cum comparationis %verbis] as, than, from
+    : Alia sunt legati officia **atque** imperatoris
+    --- The obligations of the legate are different **from** those of the general
+
+FORMAE ALIAE
+------------
+
+-- ac
+-- [prisce] adque
+
+"""
+nota usus: Forma **atque** ante %vocales usa est, et alia forma **ac** ante
+consonantes usa est. Itaque usu, elisione, una syllaba facit forma utraque.
+"""
+
+SYNONYMA
+--------
+
+-- et
+-- -que
+
+
+
+# bellum #
+|ˈbɛl.lũ|(CL)
+|ˈbɛl.lʊm|(VA)
+
+## nomen, neutri, 2^ae declinationis ##
+{geniti%vus}(bellī)
+    |ˈbɛl.liː|(CL)
+    |ˈbɛl.li|(VA)
+
+- war
+
+DECLINATIO
+----------
+
+''' Locati%vum casum habet '''
+
+
+
+# canere #
+|ˈka.nɛ.rɛ|(LA)
+
+## %verbum, 3^ae con%jugationis ##
+{infiniti%vum perfectum}(cecinisse)
+    |kɛ.kɪˈnɪs.sɛ|(LA)
+{supinum}(cantum)
+    |ˈkan.tũ|(CL)
+    |ˈkan.tʊm|(VA)
+
+### transiti%vus ###
+
+1. to sing, sing of
+    : 'Arma %virumque **cano**...'
+    --- "Arms and a man I **sing**..."
+2. [belli] to sound (the signal)
+    : signum (receptui) **canere**
+    --- **to sound** the signal (for retreat)
+
+### intransiti%vus ###
+
+3. [cum ablati%vo] to play (an instrument)
+    : tibia **canere**
+    --- **to play** the flute
+
+
+

@@ -5,11 +5,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.ParserConfigurationException;
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Dictionary: Top level member
+ * DictionaryWriter Dictionary
  * Copyright (C) 2016  Nicola Buescher
  * <p>
  * This program is free software: you can redistribute it and/or modify
@@ -25,45 +26,45 @@ import java.util.ArrayList;
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-public class Dictionary {
+public class Dictionary implements Serializable {
+
     private final String XMLNS = "http://www.w3.org/1999/xhtml";
     private final String XMLNS_D = "http://www.apple.com/DTDs/DictionaryService-1.0.rng";
-    private ArrayList<DictEntry> entries = new ArrayList<>();
 
+    private List<D_entry> entries;
 
-    public ArrayList<DictEntry> getEntries() {
-        return entries;
+    public Dictionary() {
+        entries = new ArrayList<>();
     }
 
+    public Dictionary(Element element) throws Exception {
+        this();
+        if (!element.getTagName().equals("d:dictionary"))
+            throw new Exception("The element is not a 'd:dictionary'");
 
-    public static Dictionary fromElement(Element element) throws Exception {
-        if (element.getTagName().equals("d:dictionary")) {
-            Dictionary dictionary = new Dictionary();
-            NodeList nodes = element.getChildNodes();
-            for (int i = 0; i < nodes.getLength(); i++) {
-                Node node = nodes.item(i);
-                if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("d:entry")) {
-                    dictionary.entries.add(DictEntry.fromElement((Element) node));
+        NodeList nodes = element.getChildNodes();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
 
-                } else if (node.getNodeType() == Node.TEXT_NODE) {
-                } else {
-                    System.err.println("Failed to create 'DictEntry' from " + node.getNodeName() + "! The element could not be imported.");
-                }
-            }
-            return dictionary;
-        } else {
-            System.err.println("Failed to create top level member 'Dictionary' from " + element.getTagName() + "! The file could not be imported.");
-            return null;
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals("d:entry"))
+                entries.add(new D_entry((Element) node));
+            else if (node.getNodeType() != Node.TEXT_NODE)
+                System.err.println("The node is either not an element, not a text node, or not a 'd:entry'! Ignoring.");
         }
     }
 
-    public Element toElement(Document doc) throws ParserConfigurationException {
-        Element element = doc.createElement("d:dictionary");
+    public List<D_entry> getEntries() {
+        return entries;
+    }
+
+    public Element toElementWithDocument(Document document) {
+        Element element = document.createElement("d:dictionary");
+
         element.setAttribute("xmlns", XMLNS);
         element.setAttribute("xmlns:d", XMLNS_D);
 
-        for (DictEntry dictEntry : entries)
-            element.appendChild(dictEntry.toElement(doc));
+        for (D_entry entry : entries)
+            element.appendChild(entry.toElementWithDocument(document));
 
         return element;
     }

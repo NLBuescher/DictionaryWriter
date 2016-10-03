@@ -11,12 +11,12 @@
 
 <!--
     This XSL does the followings.
-    - Add style to mask unwanted pronunciation formats.
-    - $pronunciation is externally provided.
+    - Add style to mask unwanted pronunciationGroup formats.
+    - $pronunciationGroup is externally provided.
 -->
 
 <!--<xsl:template match="*[@d:pr='']">
-    <xsl:if test="$pronunciation = '0'">
+    <xsl:if test="$pronunciationGroup = '0'">
         <xsl:copy>
             <xsl:apply-templates select="@*|node()" />
         </xsl:copy>
