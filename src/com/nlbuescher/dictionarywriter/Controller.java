@@ -64,6 +64,7 @@ public class Controller implements Initializable {
     @FXML private MenuItem importMenuItem;
     @FXML private MenuItem saveMenuItem;
     @FXML private MenuItem saveAsMenuItem;
+    @FXML private MenuItem exportMenuItem;
 
     @FXML private TreeView<Object> treeView;
 
@@ -72,6 +73,8 @@ public class Controller implements Initializable {
     @FXML private WebView cssEditor;
 
     @FXML private WebView preview;
+
+    @FXML private Label statusBarLabel;
 
 
     @Override public void initialize(URL location, ResourceBundle resources) {
@@ -84,12 +87,14 @@ public class Controller implements Initializable {
             importMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.I, KeyCombination.META_DOWN));
             saveMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN));
             saveAsMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.S, KeyCombination.META_DOWN, KeyCombination.SHIFT_DOWN));
+            exportMenuItem.setAccelerator(new KeyCodeCombination(KeyCode.E, KeyCombination.META_DOWN));
         }
 
-        entryEditor.getEngine().loadContent("<pre id=\"editor\" contenteditable=\"true\" style=\"outline: none; font-family: 'Menlo', monospace; font-size: 80%;\"></pre>");
+        String editorInitString = "<pre id=\"editor\" contenteditable=\"true\" style=\"outline: none; font-family: 'Menlo', monospace; font-size: 80%;\"></pre>";
 
-        JSObject js = (JSObject) entryEditor.getEngine().executeScript("window");
-        js.setMember("controller", this);
+        entryEditor.getEngine().loadContent(editorInitString);
+        JSObject entryJS = (JSObject) entryEditor.getEngine().executeScript("window");
+        entryJS.setMember("controller", this);
         entryEditor.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue == Worker.State.SUCCEEDED) {
                 entryEditor.getEngine().executeScript(""
@@ -99,8 +104,19 @@ public class Controller implements Initializable {
             }
         });
 
-        indexEditor.getEngine().loadContent("<div id=\"editor\" contenteditable=\"false\" style=\"outline: none; font-family: 'Menlo', monospace; font-size: 80%\">Index Editor</div>");
-        cssEditor.getEngine().loadContent("<div id=\"editor\" contenteditable=\"false\" style=\"outline: none; font-family: 'Menlo', monospace; font-size: 80%\">CSS Editor</div>");
+        indexEditor.getEngine().loadContent(editorInitString);
+        JSObject indexJS = (JSObject) indexEditor.getEngine().executeScript("window");
+        indexJS.setMember("controller", this);
+        indexEditor.getEngine().getLoadWorker().stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                indexEditor.getEngine().executeScript(""
+                        + "document.getElementById('editor').addEventListener('input', function() {"
+                        + "    controller.editorChanged(document.getElementById('editor').innerText + '\\n', 'index')"
+                        + "}, false)");
+            }
+        });
+
+        cssEditor.getEngine().loadContent(editorInitString);
 
         treeView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) { // Does not execute with null
@@ -111,11 +127,12 @@ public class Controller implements Initializable {
         });
     }
 
-    @SuppressWarnings("unused")
-    public void editorChanged(String newText, String source) {
+    @SuppressWarnings("unused") public void editorChanged(String newText, String source) {
         switch (source) {
             case "entry":
                 ((D_entry) treeView.getSelectionModel().getSelectedItem().getValue()).setEntryText(newText);
+                TreeItem<Object> treeItem = treeView.getSelectionModel().getSelectedItem();
+                treeItem.getParent().getChildren().set(treeItem.getParent().getChildren().indexOf(treeItem), treeItem);
                 updatePreview(treeView.getSelectionModel().getSelectedItem());
                 break;
             case "index":
@@ -124,21 +141,33 @@ public class Controller implements Initializable {
         }
     }
 
-    private void updateEntryEditor(TreeItem treeItem) {
-        if (treeItem.getValue() instanceof D_entry) {
-            D_entry entry = (D_entry) treeItem.getValue();
-            entryEditor.getEngine().executeScript("document.getElementById('editor').innerText = '" + entry.getEntryText().trim().replace("\n", "\\n").replace("'", "\\'") + "';");
 
+    private void loadMD() {
+        DictionaryWriter.getStage().setTitle("Dictionary Writer - [" + currentFile.getAbsolutePath().replaceAll("/Users/.+?/", "~/") + "]");
+
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(currentFile));
+
+            dictionary = (Dictionary) inputStream.readObject();
+
+            TreeItem<Object> treeRoot = new TreeItem<>(dictionary);
+            treeRoot.setExpanded(true);
+            treeRoot.expandedProperty().addListener((observable, oldValue, newValue) -> {
+                if (!newValue)
+                    treeRoot.setExpanded(true);
+            });
+
+            for (D_entry entry : dictionary.getEntries())
+                treeRoot.getChildren().add(new TreeItem<>(entry));
+
+            treeView.setRoot(treeRoot);
+            treeView.setShowRoot(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            documentLoaded = true;
         }
     }
-
-    private void updateIndexEditor(TreeItem treeItem) {
-        if (treeItem.getValue() instanceof D_entry) {
-            D_entry entry = (D_entry) treeItem.getValue();
-            indexEditor.getEngine().executeScript("document.getElementById('editor').innerText = '" + entry.getIndexText().trim().replace("\n", "\\n").replace("'", "\\'") + "';");
-        }
-    }
-
 
     private void loadXML() {
         DictionaryWriter.getStage().setTitle("Dictionary Writer - Imported Dictionary [" + currentFile.getAbsolutePath().replaceAll("/Users/.+?/", "~/") + "]");
@@ -172,23 +201,23 @@ public class Controller implements Initializable {
         }
     }
 
-    @FXML private void importFile() {
-        FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Import");
-        fileChooser.getExtensionFilters().add(new ExtensionFilter("XHTML/XML Files", "*.xhtml", "*.XHTML", "*.xml", "*.XML"));
-
-        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
-        if (file != null) {
-            currentFile = file;
-            newFile = true;
-            loadXML();
+    private void updateEntryEditor(TreeItem treeItem) {
+        if (treeItem.getValue() instanceof D_entry) {
+            D_entry entry = (D_entry) treeItem.getValue();
+            entryEditor.getEngine().executeScript("document.getElementById('editor').innerText = '" + entry.getEntryText().trim().replace("\n", "\\n").replace("'", "\\'") + "';");
         }
     }
 
-    private void updatePreview(TreeItem<Object> treeItem) {
+    private void updateIndexEditor(TreeItem treeItem) {
+        if (treeItem.getValue() instanceof D_entry) {
+            D_entry entry = (D_entry) treeItem.getValue();
+            indexEditor.getEngine().executeScript("document.getElementById('editor').innerText = '" + entry.getIndexText().trim().replace("\n", "\\n").replace("'", "\\'") + "';");
+        }
+    }
+
+    private void updatePreview(TreeItem treeItem) {
         if (treeItem != null) {
             TreeItem<Object> item = treeItem;
-
 
             if (!(item.getValue() instanceof Dictionary))
                 while (!(item.getValue() instanceof D_entry))
@@ -210,11 +239,7 @@ public class Controller implements Initializable {
                     StringWriter writer = new StringWriter();
                     StreamResult result = new StreamResult(writer);
 
-                    Transformer transformer = TransformerFactory.newInstance().newTransformer();
-                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-                    transformer.transform(source, result);
+                    TransformerFactory.newInstance().newTransformer().transform(source, result);
 
                     String previewString = filterMD(writer.toString());
 
@@ -239,17 +264,85 @@ public class Controller implements Initializable {
             dialog.setHeaderText(null);
             dialog.setContentText("Please enter an entry title:");
 
-            D_entry entry = new D_entry();
+            D_entry newEntry = new D_entry();
 
             dialog.showAndWait().ifPresent(title -> {
-                entry.setEntryText("# " + title + " #");
-                entry.setTitle(title);
+                newEntry.setEntryText("# " + title + " #");
+                newEntry.setTitle(title);
             });
 
-            ((Dictionary) treeView.getRoot().getValue()).getEntries().add(entry);
-            TreeItem<Object> treeItem = new TreeItem<>(entry);
-            treeView.getRoot().getChildren().add(treeItem);
-            treeView.getSelectionModel().select(treeItem);
+            TreeItem<Object> selectedItem = treeView.getSelectionModel().getSelectedItem();
+
+            // Entry List
+            Dictionary dictionary = ((Dictionary) treeView.getRoot().getValue());
+            D_entry selectedEntry = ((D_entry) selectedItem.getValue());
+            int selectedEntryIndex = dictionary.getEntries().indexOf(selectedEntry);
+            dictionary.getEntries().add(selectedEntryIndex+1, newEntry);
+
+            // Tree View
+            TreeItem<Object> newTreeItem = new TreeItem<>(newEntry);
+            int selectedItemIndex = treeView.getRoot().getChildren().indexOf(selectedItem);
+            treeView.getRoot().getChildren().add(selectedItemIndex+1, newTreeItem);
+            treeView.getSelectionModel().select(newTreeItem);
+        }
+    }
+
+    @FXML private void export() {
+        if (documentLoaded) {
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Export...");
+            fileChooser.getExtensionFilters().add(new ExtensionFilter("XHTML files", "*.xhtml", "*.XHTML"));
+
+            File exportFile = fileChooser.showSaveDialog(root.getScene().getWindow());
+
+            if (exportFile != null) {
+                try {
+                    Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+
+                    Element root = dictionary.toElementWithDocument(document);
+
+                    document.appendChild(root);
+                    document.insertBefore(document.createProcessingInstruction("xml-stylesheet", "type=\"text/css\" href=\"style.css\""), root);
+                    document.insertBefore(document.createProcessingInstruction("xml-stylesheet", "type=\"text/xsl\" href=\"webtransform.xsl\""), root);
+
+                    DOMSource source = new DOMSource(document);
+                    StringWriter writer = new StringWriter();
+                    StreamResult result = new StreamResult(writer);
+
+                    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+                    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+                    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
+
+                    transformer.transform(source, result);
+
+                    String outString = filterMD(writer.toString());
+
+                    FileOutputStream out = new FileOutputStream(exportFile);
+                    out.write(outString.getBytes("UTF-8"));
+
+                    statusBarLabel.setText("Exported dictionary to " + exportFile.getAbsolutePath().replaceAll("/Users/.+?/", "~/") + ".");
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.err.println("No file specified! Doing nothing. ^^");
+            }
+        } else {
+            System.err.println("No document is loaded! Doing nothing. ^^");
+        }
+    }
+
+    @FXML private void importFile() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Import");
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("XHTML/XML Files", "*.xhtml", "*.XHTML", "*.xml", "*.XML"));
+
+        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
+        if (file != null) {
+            currentFile = file;
+            newFile = true;
+            loadXML();
         }
     }
 
@@ -340,11 +433,12 @@ public class Controller implements Initializable {
         File file = fileChooser.showOpenDialog(root.getScene().getWindow());
         if (file != null) {
             currentFile = file;
+            newFile = false;
             loadMD();
         }
     }
 
-    @FXML private void removeSelectedItem() {
+    @FXML private void removeSelectedEntry() {
         TreeItem<Object> treeItem = treeView.getSelectionModel().getSelectedItem();
 
         if (treeItem != null && !(treeItem.getValue() instanceof Dictionary) && treeItem.getValue() instanceof D_entry) {
@@ -373,6 +467,8 @@ public class Controller implements Initializable {
 
                 } catch (Exception e) {
                     e.printStackTrace();
+                } finally {
+                    newFile = false;
                 }
             } else {
                 System.err.println("No file specified! Doing nothing. ^^");
@@ -388,34 +484,7 @@ public class Controller implements Initializable {
     }
 
 
-    private void loadMD() {
-        DictionaryWriter.getStage().setTitle("Dictionary Writer - [" + currentFile.getAbsolutePath().replaceAll("/Users/.+?/", "~/") + "]");
-
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(new FileInputStream(currentFile));
-
-            dictionary = (Dictionary) inputStream.readObject();
-
-            TreeItem<Object> treeRoot = new TreeItem<>(dictionary);
-            treeRoot.setExpanded(true);
-            treeRoot.expandedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue)
-                    treeRoot.setExpanded(true);
-            });
-
-            for (D_entry entry : dictionary.getEntries())
-                treeRoot.getChildren().add(new TreeItem<>(entry));
-
-            treeView.setRoot(treeRoot);
-            treeView.setShowRoot(false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            documentLoaded = true;
-        }
-    }
-
-
+    // Helper Methods
     private String filterMD(String text) {
         return text
                 .replaceAll("\\?><", "?>\n<")

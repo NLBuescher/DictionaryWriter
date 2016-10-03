@@ -13,14 +13,25 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.*;
 
+/**
+ * DictionaryWriter D_entry
+ * Copyright (C) 2016  Nicola Buescher
+ * <p>
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 public class D_entry implements Serializable {
     private String title;
     private String entryText;
@@ -33,7 +44,7 @@ public class D_entry implements Serializable {
         this.indexText = "";
     }
 
-    public D_entry(Element element) throws Exception {
+    D_entry(Element element) throws Exception {
         this();
         if (!element.getTagName().equals("d:entry"))
             throw new Exception("The element is does not have the proper tag!");
@@ -60,20 +71,18 @@ public class D_entry implements Serializable {
         this.indexText = indexText;
     }
 
-    public String getTitle() {
-        return this.title;
-    }
-
     public void setTitle(String title) {
         this.title = title;
     }
 
+
     private void updateTitle() {
-        if (!this.entryText.replaceAll("# (.*?) #.*", "$1").equals(entryText))
-            this.title = this.entryText.replaceAll("# (.*?) #.*", "$1").replaceAll("%", "");
+        if (!this.entryText.replaceFirst("# (.*?) #(.|\\n)*", "$1").equals(entryText))
+            this.title = this.entryText.replaceFirst("# (.*?) #(.|\\n)*", "$1").replaceAll("%", "");
     }
 
-    public Element toElementWithDocument(Document document) {
+
+    Element toElementWithDocument(Document document) {
 
         final EntryLexer lexer = new EntryLexer(new ANTLRInputStream(entryText));
         final CommonTokenStream tokens = new CommonTokenStream(lexer);
@@ -388,7 +397,7 @@ public class D_entry implements Serializable {
 
             // Get example translation
             if (exampleContext.exampleTranslation() != null) {
-                String exampleTranslation = exampleContext.exampleTranslation().getText().replaceAll("[\\s\\t]*--- (.*)", " — $1").trim();
+                String exampleTranslation = exampleContext.exampleTranslation().getText().trim().replaceAll("[\\s\\t]*--- (.*)", " — $1");
                 Element translation = document.createElement("span");
                 translation.setAttribute("class", "exampleTranslation");
                 translation.appendChild(document.createTextNode(exampleTranslation));
@@ -550,22 +559,25 @@ public class D_entry implements Serializable {
 
     private void insertIndicesToElementWithDocument(Element element, Document document) {
 
-        String[] indices = indexText.split("\n");
-        for (int i = indices.length - 1; i >= 0; i--) {
+        if (!indexText.equals("")) {
+            String[] indices = indexText.split("\n");
+            for (int i = indices.length - 1; i >= 0; i--) {
 
-            String[] indexValues = indices[i].split(":");
-            if (indexValues.length == 2) {
-                Element index = document.createElement("d:index");
+                String[] indexValues = indices[i].split(":");
+                if (indexValues.length == 2) {
+                    Element index = document.createElement("d:index");
 
-                index.setAttribute("d:title", indexValues[0].trim());
-                index.setAttribute("d:value", indexValues[1].trim());
+                    index.setAttribute("d:title", indexValues[0].trim());
+                    index.setAttribute("d:value", indexValues[1].trim());
 
-                element.insertBefore(index, element.getFirstChild());
-            } else {
-                System.err.println("The index (" + indices[i] +  ") was malformed! Ignoring it.");
+                    element.insertBefore(index, element.getFirstChild());
+                } else {
+                    System.err.println("The index (" + indices[i] + ") was malformed! Ignoring it.");
+                }
             }
         }
     }
+
 
     private void getTextFromElement(Element element) {
 
@@ -787,71 +799,8 @@ public class D_entry implements Serializable {
         }
     }
 
+
     @Override public String toString() {
         return this.title;
-    }
-
-    public static void main(String[] args) {
-
-        String text = "";
-
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(new File("parserTest")));
-            D_entry test = new D_entry();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                text += line + "\n";
-            }
-
-            System.out.println(text);
-
-            test.entryText = text;
-
-
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-            Element element = test.toElementWithDocument(document);
-            element.setAttribute("xmlns", "http://www.w3.org/1999/xhtml");
-            element.setAttribute("xmlns:d", "http://www.apple.com/DTDs/DictionaryService-1.0.rng");
-            document.appendChild(element);
-
-            DOMSource source = new DOMSource(document);
-            StringWriter writer = new StringWriter();
-            StreamResult result = new StreamResult(writer);
-
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            transformer.transform(source, result);
-
-            String outString = writer.toString()
-                    .replaceAll("\\?><", "?>\n<")
-                    .replaceFirst(" standalone=\"no\"", "")
-                    .replaceFirst("<d:dictionary", "\n<d:dictionary")
-                    .replaceAll("\\n[\\s]*<span d:pr", "<span d:pr")
-                    .replaceAll(">\\(<", ">\n" + indent(5) + "(\n" + indent(5) + "<")
-                    .replaceAll(">,<", ">\n" + indent(5) + ",\n" + indent(5) + "<")
-                    .replaceAll(">\\)<", ">\n" + indent(5) + ")\n" + indent(4) + "<")
-                    .replaceAll("%(.)", "<span id=\"$1\"/>")
-                    .replaceAll("\\*\\*\\*(.*?)\\*\\*\\*", "<b><i>$1</i></b>")
-                    .replaceAll("\\*\\*(.*?)\\*\\*", "<b>$1</b>")
-                    .replaceAll("\\*(.*?)\\*", "<i>$1</i>")
-                    .replaceAll("\\^\\((.*?)\\)", "<sup>$1</sup>")
-                    .replaceAll("\\^(.)", "<sup>$1</sup>");
-
-            System.out.println(outString);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static String indent(int length) {
-        String space = "    ";
-        String indent = "";
-        for (int i = 0; i < length; i++)
-            indent += space;
-
-        return indent;
     }
 }

@@ -67,8 +67,11 @@
                         <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="DOWN" shortcut="UP" />
                     </accelerator>
                 </MenuItem>
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem fx:id="testMenuItem" mnemonicParsing="false" text="Test Markdown" />
+            <MenuItem fx:id="exportMenuItem" mnemonicParsing="false" onAction="#export" text="Export...">
+               <accelerator>
+                  <KeyCodeCombination alt="UP" code="E" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+               </accelerator>
+            </MenuItem>
             </Menu>
         </MenuBar>
     </top>
@@ -100,7 +103,7 @@
                             <Tooltip text="Add..." />
                         </tooltip>
                     </Button>
-                    <Button mnemonicParsing="false" onAction="#removeSelectedItem" text="-">
+                    <Button mnemonicParsing="false" onAction="#removeSelectedEntry" text="-">
                         <tooltip>
                             <Tooltip text="Remove Item" />
                         </tooltip>

@@ -149,11 +149,11 @@ example
     ;
 
 exampleText
-    : ExampleText
+    : Indent? ExampleText
     ;
 
 exampleTranslation
-    : ExampleTranslation
+    : Indent? ExampleTranslation
     ;
 
 subDefinitionGroup

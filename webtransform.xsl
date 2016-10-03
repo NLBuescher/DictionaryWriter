@@ -6,7 +6,7 @@
             doctype-public="-//W3C//DTD XHTML 1.1//EN"
             doctype-system="http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd" />
 
-<xsl:variable name="la_text" select="'0'"/>
+<xsl:variable name="la_text" select="'2'"/>
 <xsl:variable name="la_pronunciation" select="'0'"/>
 
 <!--
