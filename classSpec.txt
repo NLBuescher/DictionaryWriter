@@ -3,18 +3,18 @@ d:dictionary [xmlns, xmlns:d]
     |-> d:index [d:title, d:value]
     |-> HeadGroup
     |   |-> HeadWord
-    |   +-> Pronunciation [|...|]
-    |       +-> LA_IPA *
+    |   +-> PronunciationGroup
+    |       +-> Pronunciation
     +-> EntryGroup
         +-> Entry
             |-> GrammarGroup
             |   |-> Grammar
-            |   |-> Specification
             |   +-> FormGroup [(..., ...)]
             |       +-> Form
             |           |-> FormLabel
             |           |-> FormText
-            |           +-> Pronunciation
+            |           +-> PronunciationGroup
+            |               +-> Pronunciation
             +-> DefinitionGroup
             |   |-> DefinitionGroupLabel
             |   +-> Definition
