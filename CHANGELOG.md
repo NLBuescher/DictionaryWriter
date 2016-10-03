@@ -15,12 +15,12 @@ loosely on markdown, but is custom built to fit various dictionary entry compone
 using an `ANTLR4` grammar.
 
 Added:
-- added a use for the status bar: showing the status!
+- added a use for the status bar: showing the status! (still need to add it in many cases)
 
 Changed:
 - the app no longer reads and writes directly from and to `XHTML` files (it can import and export a dictionary from and 
     to `XHTML`), but instead saves files as `mddict`s which are just serialized `Dictionary` objects. this change is to
-    preserve text formatting on save and load since the markdow syntax allows for some flexibility.
+    preserve text formatting on save and load since the markdown syntax allows for some flexibility.
 - the `TreeView` now only shows entries in the dictionary, greatly reducing the clutter.
 - added `WebView`-based entry, index, and CSS editors, and removed the `TextField`-based editor entirely.
 - the entry editor content is converted to xhtml with the help of an `ANTLR4` grammar and thereby generated parser
