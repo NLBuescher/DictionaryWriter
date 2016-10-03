@@ -1,12 +1,12 @@
 # Changelog
 
 ## Planned Features
+- adding an app icon
+- adding syntax highlighting and error marking
 - adding the ability to actually edit the CSS for the dictionary (the CSS editor is currently empty and does nothing).
 - adding status updates for various task to the status bar (file saved, file imported, file loaded, etc)
 - adding tutorial-like help stuff to the readme or wiki
 - giving the user copypasta powers for tree items
-- have buttons start as `disabled` by default and have them enable themselves based on whether they have a function in 
-    the current context
 
 ## Release v2.0.0
 
