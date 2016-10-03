@@ -10,7 +10,7 @@
 
 ## Release v2.0.0
 
-i rewrote the app to use a markdown-style editor instead of individual textboxes. the markdown-like syntax is based
+i rewrote the app to use a markdown-style editor instead of individual `TextField`s. the markdown-like syntax is based
 loosely on markdown, but is custom built to fit various dictionary entry components. the markdown parser is implemented
 using an `ANTLR4` grammar.
 
@@ -32,7 +32,7 @@ Changed:
     - should investigate what happens when no entry is selected (will do so for next patch).
 
 API changes:
-- organized the mehthods in the controller class first by `public` v `private`, then by `@FXML` declaration, then
+- organized the methods in the controller class first by `public` v `private`, then by `@FXML` declaration, then
     alphabetically.
 
 
